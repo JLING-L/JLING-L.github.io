@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Posts on JLING-L</title>
-        <link>https://JLING-L.github.io/post/</link>
-        <description>Recent content in Posts on JLING-L</description>
+        <title>UIE on JLING-L</title>
+        <link>https://JLING-L.github.io/tags/uie/</link>
+        <description>Recent content in UIE on JLING-L</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>JLING-L</copyright>
-        <lastBuildDate>Wed, 30 Oct 2024 16:37:14 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 30 Oct 2024 16:37:14 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/tags/uie/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</title>
         <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/</link>
         <pubDate>Wed, 30 Oct 2024 16:37:14 +0800</pubDate>
