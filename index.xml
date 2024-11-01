@@ -31,17 +31,104 @@ EE任务的目标是识别文本中发生的事件，并提取出事件的参与
 &lt;/ol&gt;
 &lt;p&gt;可以看出，对于不同的IE任务，随着任务目标的变化，需要抽取出的信息的结构也各有不同，例如在NER中要抽取出的是句子中的单词或短语，在RE任务中又需要判断两个实体间的关系。&lt;br&gt;
 因此要完成不同的任务，就需要定义不同的抽取模式(即信息抽取时需要遵循的结构化规则或框架)。&lt;br&gt;
-但可以观察到，这几个任务之间其实是有共通之处的，比如RE，就可以看作是NER任务的进一步扩展。&lt;br&gt;
-那么，是否有办法对这三个任务统一建模呢？&lt;/p&gt;
+但可以观察到，这几个任务之间其实是有共通之处的，比如RE，就可以看作是NER任务的进一步扩展。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;是否有办法对这三个任务进行统一建模？&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;下面我们来看一下UIE这篇文章。&lt;/p&gt;
-&lt;h2 id=&#34;introduction&#34;&gt;Introduction
-&lt;/h2&gt;&lt;p&gt;IE受到其不同目标、异构结构和特定需求模式的影响。此前大多数IE方法都是任务专用的，这存在几个问题：&lt;/p&gt;
+&lt;h2 id=&#34;unified-structure-generation-for-universal-information-extraction&#34;&gt;Unified Structure Generation for Universal Information Extraction
+&lt;/h2&gt;&lt;p&gt;IE受到其不同目标、异构结构和特定需求模式的影响，此前大多数IE方法都是为不同的任务设计不同的模型，这存在几个问题：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;为大量的IE任务/设置/场景开发专用架构非常复杂。&lt;/li&gt;
-&lt;li&gt;学习孤立的模型严重限制了相关任务和设置之间的知识共享。&lt;/li&gt;
-&lt;li&gt;构建专门用于不同IE任务的数据集和知识源既昂贵又耗时。&lt;/li&gt;
+&lt;li&gt;为大量的IE任务/设置/场景开发专用架构非常复杂(比如单独设计一个模型，专门处理RE任务；单独设计一个模型，专门处理EE任务，听起来就很麻烦)。&lt;/li&gt;
+&lt;li&gt;学习孤立的模型严重限制了相关任务和设置之间的知识共享(比如RE任务，NER任务中实体已经抽取好了、类别也标注好了，为什么不能直接用呢)。&lt;/li&gt;
+&lt;li&gt;构建专门用于不同IE任务的数据集和知识源既昂贵又耗时(不同任务的数据集的知识是不是可以共享呢)。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;作者认为，所有IE任务都可以建模为文本到结构(text-to-structure)的转换。&lt;/p&gt;
+&lt;h3 id=&#34;structured-extraction-language-for-uniform-structure-encoding-sel&#34;&gt;Structured Extraction Language for Uniform Structure Encoding (SEL)
+&lt;/h3&gt;&lt;p&gt;首先，要将不同的IE结构编码成统一的表示，这样就可以在同一个文本-结构的生成框架中对各种IE任务进行统一建模。具体而言，作者将这一转换过程拆分为了两个子操作：&lt;br&gt;
+例：Steve works for Apple.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;定位(Spotting)：在文本中找到特定语义类型的span，将文本中的特定span根据预先定义的语义类型进行标注。例：&amp;ldquo;Steve&amp;quot;被标注为&amp;quot;Person&amp;rdquo;。&lt;/li&gt;
+&lt;li&gt;关联(Associating)：对已经定位的span进行关联(例如标记实体对之间的关系)。例：将&amp;quot;Steve&amp;quot;标记为Arg1，&amp;ldquo;Apple&amp;quot;标记为Arg2(类似将&amp;quot;Steve&amp;quot;视为头实体，&amp;ldquo;Apple&amp;quot;视为尾实体)。关联Arg1和Arg2，即判断这两个实体之间的关系，我们将关系标注为&amp;quot;Work-for&amp;rdquo;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;作者使用Spot Name和Asso Name分别表示Spotting和Associating操作。Info Span则表示Spot Name和Asso Name所标记的实际文本信息。&lt;br&gt;
+我们来看作者给出的一个具体示例。&lt;br&gt;
+&lt;img src=&#34;SEL_example.jpg&#34; style=&#34;zoom:45%&#34; /&gt;&lt;br&gt;
+例：对于文本输入&amp;quot;Steve became CEO of Apple in 1997.&amp;quot;，通过SEL生成的结构：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;RE(蓝色)：头实体&amp;quot;Steve&amp;rdquo;(Info Span)，类型标注为&amp;quot;person&amp;rdquo;(Spot Name)；尾实体&amp;quot;Apple&amp;quot; (Info Span)，类型标注为&amp;quot;organization&amp;quot;(Spot Name)；关系&amp;quot;work-for&amp;quot;(Asso Name)。&lt;/li&gt;
+&lt;li&gt;EE(红色)：触发词&amp;quot;became&amp;quot;(Info Span)，类型标注为&amp;quot;start-position&amp;quot;(Spot Name)。事件下对应的三个论元&amp;quot;Steve&amp;quot; (Info Span)，&amp;ldquo;Apple&amp;rdquo; (Info Span)，&amp;ldquo;1997&amp;rdquo; (Info Span)分别扮演&amp;quot;employee&amp;quot;(Spot Name)，&amp;ldquo;employer&amp;rdquo;(Spot Name)，&amp;ldquo;time&amp;rdquo;(Spot Name)的事件角色。&lt;/li&gt;
+&lt;li&gt;NER(黑色)：实体&amp;quot;Steve&amp;quot;(Info Span)，类型标注为&amp;quot;person&amp;quot;(Spot Name)；实体&amp;quot;Apple&amp;quot; (Info Span)，类型标注为&amp;quot;organization&amp;quot;(Spot Name)；实体&amp;quot;1997&amp;quot; (Info Span)，类型标注为&amp;quot;time&amp;quot;(Spot Name)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这样一来，无论对二元关系，还是N元论元结构，都可以用SEL语法表示。&lt;/p&gt;
+&lt;h3 id=&#34;structural-schema-instructor-for-controllable-ie-structure-generation-ssi&#34;&gt;Structural Schema Instructor for Controllable IE Structure Generation (SSI)
+&lt;/h3&gt;&lt;p&gt;虽然三个IE任务都可以通过SEL统一表示结构，但模型还不知道什么时候该做什么。&lt;br&gt;
+作者设计了特殊符号[spot], [asso]和[text]，分别添加到每个Spot Name、Asso Name和输入文本序列之前，来提示模型要提取哪些信息。&lt;br&gt;
+&lt;img src=&#34;uie_framwork.jpg&#34; style=&#34;zoom:42%&#34; /&gt;&lt;br&gt;
+具体的例子如图所示，类似于给一个表格让模型去填写表格内容。&lt;br&gt;
+但当需要提取出的信息较多、句子结构比较复杂的情况下，输入序列会变得非常长：&lt;br&gt;
+&lt;img src=&#34;example.jpg&#34; style=&#34;zoom:37%&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;structure-generation-with-uie&#34;&gt;Structure Generation with UIE
+&lt;/h3&gt;&lt;p&gt;简单来说，UIE的输入是SSI+Text的形式，输出是用SEL语法表示的结构。UIE整体可以看作是Encoder-Decoder架构的模型：&lt;/p&gt;
+&lt;h4 id=&#34;encoder&#34;&gt;Encoder
+&lt;/h4&gt;&lt;p&gt;通过Transformer Encoder对SSI $s$和文本序列$x$进行编码，生成hidden representation:
+&lt;/p&gt;
+$$
+H = Encoder(s_1, s_2, s_{|s|}, x_1, ..., x_{|x|})
+$$&lt;h4 id=&#34;decoder&#34;&gt;Decoder
+&lt;/h4&gt;&lt;p&gt;使用Transformer Decoder以自回归的方式逐步生成目标SEL序列：
+&lt;/p&gt;
+$$
+y_i, h_i^d = Decoder([H; h_1^d, ..., h_{i-1}^d])
+$$&lt;p&gt;
+当解码器生成特殊的结束符号&amp;lt;eos&amp;gt;时，解码过程完成。&lt;/p&gt;
+&lt;p&gt;作者认为，文本-结构的生成范式将标签视为自然语言标记，这一方法可以有效地转移来自BART、T5等预训练语言模型的知识，相关任务可以很容易地共享知识，因为它们的标签具有相似的语义(例如，location和place)，并共享共同的标签-文本关联(例如，不同事件类型的受害者)。&lt;/p&gt;
+&lt;h3 id=&#34;pre-training-for-uie&#34;&gt;Pre-training for UIE
+&lt;/h3&gt;&lt;h4 id=&#34;预训练数据集&#34;&gt;预训练数据集
+&lt;/h4&gt;&lt;p&gt;包括结构化(例如，知识库)、非结构化(例如，原始文本)和并行(例如，维基百科-维基数据链接)数据：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;$D_{record}$(结构)：$D_{record}$是一个结构数据集，每个实例是一个结构化记录$y$。该数据集从ConceptNet(一个常识知识库)和Wikidata中收集结构化记录。$D_{record}$用于预训练UIE的结构解码能力，帮助模型在理解结构化记录后，能够从这些记录生成有效的输出。&lt;/li&gt;
+&lt;li&gt;$D_{text}$(文本)：$D_{text}$是一个非结构化文本数据集，包含英语维基百科中的所有纯文本。$D_{text}$用于预训练UIE的语义编码能力。通过对大规模的非结构化文本进行训练，模型能够更好地理解自然语言的语义、上下文和结构特征。&lt;/li&gt;
+&lt;li&gt;$D_{pair}$(文本+结构)：$D_{pair}$是文本-结构的并行数据集，每个实例由一对$(token序列x，结构化记录y)$组成。Dpair用于预训练UIE的文本到结构转换能力，使模型能够理解和处理文本与其对应结构之间的关系。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;预训练任务&#34;&gt;预训练任务
+&lt;/h4&gt;&lt;p&gt;使用三个序列生成任务来预训练UIE：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Text-to-Structure Pre-training using $D_pair$：$p(y|x,s_meta)$表示在给定文本和模式的条件下生成结构记录$y$的概率。
+$$
+{L}_{\text {Pair}}=\sum_{(x, y) \in \mathcal{D}_{\text {pair}}}-\log p\left(y \mid x, s_{\text {meta}} ; \theta_{e}, \theta_{d}\right)
+$$&lt;/li&gt;
+&lt;li&gt;Structure Generation Pre-training with $D_record$：在给定之前生成的token的情况下，预测当前token $y_i$的负对数似然。
+$$
+{L}_{\text {Record}}=\sum_{y \in \mathcal{D}_{\text {record}}}-\log p\left(y_i \mid y_{&amp;lt i}; \theta_{d}\right)
+$$&lt;/li&gt;
+&lt;li&gt;Retrofitting Semantic Representation using $D_text$：给定被Mask的源文本，让模型还原被Mask的部分。
+$$
+{L}_{\text {Text}}=\sum_{x \in \mathcal{D}_{\text {text}}}-\log p\left(x^{\prime \prime} \mid x^{\prime} ; \theta_{e}, \theta_{d}\right)
+$$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;最终目标是将上述任务结合起来：
+&lt;/p&gt;
+$$
+{L}={L}_{\text {Pair}} + {L}_{\text {Record}} + {L}_{\text {Text}}
+$$&lt;h3 id=&#34;fine-tuning-for-uie&#34;&gt;Fine-tuning for UIE
+&lt;/h3&gt;&lt;p&gt;给定一个标记语料库$D_task={(s, x, y)}$，使用teacher-forcing cross-entropy loss来微调UIE模型：
+&lt;/p&gt;
+$$
+{L}_{FT}=\sum_{(s, x, y) \in \mathcal{D}_{\text {Task}}}-\log p\left(y \mid x, s; \theta_{e}, \theta_{d}\right)
+$$&lt;p&gt;
+为了缓解暴露偏差，在解码过程中，作者还设计了一种拒绝机制。给定实例$(s, x, y)$，使用SEL对$y$进行编码，随机加入$[NULL]$噪声。具体示例如图所示：&lt;br&gt;
+&lt;img src=&#34;noise_example.jpg&#34; style=&#34;zoom:45%&#34; /&gt;&lt;br&gt;
+句子中没有facility实体，在模型学习时随机注入&amp;quot;(facility：[NULL])&amp;ldquo;的噪声。通过这种方式，UIE可以通过生成[NULL]来有效地学习拒绝误导生成。&lt;/p&gt;
+&lt;h2 id=&#34;experiment&#34;&gt;Experiment
+&lt;/h2&gt;&lt;img src=&#34;main_result.jpg&#34; style=&#34;zoom:58%&#34; /&gt;   
+&lt;p&gt;可以看到，UIE在多个任务上SOTA。&lt;br&gt;
+ps：其他的实验结果具体可以看原文，在这里就不详细说明了。&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;提出了一个统一的文本到结构生成框架——UIE(T5+结构化生成)，它可以通用地建模不同的IE任务，自适应地生成有针对性的结构，并从不同的知识源中学习通用的IE能力：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;多样化的目标结构 &amp;mdash;&amp;gt; SEL统一编码异构抽取结构&lt;/li&gt;
+&lt;li&gt;需求特定的抽取模式 &amp;mdash;&amp;gt; 基于模式的提示机制SSI&lt;/li&gt;
+&lt;li&gt;不同任务之间知识难以共享 &amp;mdash;&amp;gt; 在包含多个任务的数据集上预训练模型&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         </item>
         <item>
