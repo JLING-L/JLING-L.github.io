@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 论文：https://arxiv.org/abs/2203.12277\n代码：https://github.com/universal-ie/UIE\nAccepted to the main conference of ACL2022\n">
-<title>通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 论文：https://arxiv.org/abs/2304.08085\n代码：https://github.com/BeyonderXX/InstructUIE\n">
+<title>通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</title>
 
-<link rel='canonical' href='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/'>
+<link rel='canonical' href='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/'>
 
-<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="通用信息抽取1 | Unified Structure Generation for Universal Information Extraction">
-<meta property='og:description' content=" 论文：https://arxiv.org/abs/2203.12277\n代码：https://github.com/universal-ie/UIE\nAccepted to the main conference of ACL2022\n">
-<meta property='og:url' content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/'>
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction">
+<meta property='og:description' content=" 论文：https://arxiv.org/abs/2304.08085\n代码：https://github.com/BeyonderXX/InstructUIE\n">
+<meta property='og:url' content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/'>
 <meta property='og:site_name' content='JLING-L'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='UIE' /><meta property='article:published_time' content='2024-10-30T16:37:14&#43;08:00'/><meta property='article:modified_time' content='2024-10-30T16:37:14&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork.jpg' />
-<meta name="twitter:title" content="通用信息抽取1 | Unified Structure Generation for Universal Information Extraction">
-<meta name="twitter:description" content=" 论文：https://arxiv.org/abs/2203.12277\n代码：https://github.com/universal-ie/UIE\nAccepted to the main conference of ACL2022\n"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='UIE' /><meta property='article:published_time' content='2024-11-04T13:31:44&#43;08:00'/><meta property='article:modified_time' content='2024-11-04T13:31:44&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg' />
+<meta name="twitter:title" content="通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction">
+<meta name="twitter:description" content=" 论文：https://arxiv.org/abs/2304.08085\n代码：https://github.com/BeyonderXX/InstructUIE\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg' />
     </head>
     <body class="
     article-page
@@ -246,26 +246,19 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#unified-structure-generation-for-universal-information-extraction">Unified Structure Generation for Universal Information Extraction</a>
+    <li><a href="#instructuie">InstructUIE</a>
       <ol>
-        <li><a href="#structured-extraction-language-for-uniform-structure-encoding-sel">Structured Extraction Language for Uniform Structure Encoding (SEL)</a></li>
-        <li><a href="#structural-schema-instructor-for-controllable-ie-structure-generation-ssi">Structural Schema Instructor for Controllable IE Structure Generation (SSI)</a></li>
-        <li><a href="#structure-generation-with-uie">Structure Generation with UIE</a>
-          <ol>
-            <li><a href="#encoder">Encoder</a></li>
-            <li><a href="#decoder">Decoder</a></li>
-          </ol>
-        </li>
-        <li><a href="#pre-training-for-uie">Pre-training for UIE</a>
-          <ol>
-            <li><a href="#预训练数据集">预训练数据集</a></li>
-            <li><a href="#预训练任务">预训练任务</a></li>
-          </ol>
-        </li>
-        <li><a href="#fine-tuning-for-uie">Fine-tuning for UIE</a></li>
+        <li><a href="#task-schema">Task Schema</a></li>
+        <li><a href="#auxiliary-tasks">Auxiliary Tasks</a></li>
       </ol>
     </li>
-    <li><a href="#experiment">Experiment</a></li>
+    <li><a href="#ie-instructions">IE INSTRUCTIONS</a></li>
+    <li><a href="#experiments">Experiments</a>
+      <ol>
+        <li><a href="#supervised-experiments">Supervised Experiments</a></li>
+        <li><a href="#zero-shot-experiments">Zero-shot Experiments</a></li>
+      </ol>
+    </li>
     <li><a href="#conclusion">Conclusion</a></li>
   </ol>
 </nav>
@@ -281,13 +274,13 @@
     <article class="has-image main-article">
     <header class="article-header">
         <div class="article-image">
-            <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu4116013061025293458.jpg"
-                        srcset="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu4116013061025293458.jpg 800w, /p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu15102715505043875488.jpg 1600w"
+            <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/">
+                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework_hu10926730246567433703.jpg"
+                        srcset="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework_hu10926730246567433703.jpg 800w, /p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework_hu3236879815260282417.jpg 1600w"
                         width="800" 
-                        height="204" 
+                        height="370" 
                         loading="lazy"
-                        alt="Featured image of post 通用信息抽取1 | Unified Structure Generation for Universal Information Extraction" />
+                        alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction" />
                 
             </a>
         </div>
@@ -306,7 +299,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/">通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</a>
+            <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/">通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</a>
         </h2>
     
         
@@ -328,7 +321,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2024-10-30</time>
+                <time class="article-time--published">2024-11-04</time>
             </div>
         
 
@@ -343,7 +336,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 9 分钟
+                    阅读时长: 5 分钟
                 </time>
             </div>
         
@@ -358,121 +351,68 @@
     <section class="article-content">
     
     
-    <img src="authors.jpg" style="zoom:43%" />
-<p>论文：https://arxiv.org/abs/2203.12277<br>
-代码：https://github.com/universal-ie/UIE<br>
-Accepted to the main conference of ACL2022</p>
-<p><strong>什么是信息抽取？</strong></p>
-<p>我们首先简单介绍一下信息抽取，有了解的可以直接跳过。<br>
-信息抽取(Information Extraction, IE)是自然语言处理(NLP)领域的一个任务，旨在从非结构化的文本数据中自动识别并提取结构化的信息，例如提取文本中的关键实体、关系或事件等。主要关注三个任务：<br>
-例：Steve became CEO of Apple in 1997.</p>
+    <img src="authors.jpg" style="zoom:70%" />
+<p>论文：https://arxiv.org/abs/2304.08085<br>
+代码：https://github.com/BeyonderXX/InstructUIE</p>
+<img src="introduction.jpg" style="zoom:60%" />
+<p>之前的笔记中我们介绍了UIE(通用信息抽取1)和USM(通用信息抽取2)。我们先回顾一下这两篇工作：</p>
 <ol>
-<li>命名实体识别(Named Entity Recognition, NER)<br>
-NER任务的目标是识别文本中的实体(如人名、地点、组织等)并分类。对于上面给出的例句，识别实体&quot;Steve&quot;，类型标注为&quot;person&quot;；识别实体&quot;Apple&quot;，类型标注为&quot;organization&quot;；识别实体&quot;1997&quot;，类型标注为&quot;time&quot;。</li>
-<li>关系抽取(Relation Extraction)<br>
-RE任务的目标是识别文本中的实体关系，明确它们之间的联系。对于上面给出的例句，头实体&quot;Steve&quot;，尾实体&quot;Apple&quot;，他们之间的关系为&quot;work-for&quot;。</li>
-<li>事件抽取(Event Extraction)<br>
-EE任务的目标是识别文本中发生的事件，并提取出事件的参与实体、时间、地点等信息(事件参数)。对于上面给出的例句，识别触发词&quot;became&quot;，类型标注为&quot;start-position&quot;。事件下对应的三个论元&quot;Steve&quot;，&ldquo;Apple&rdquo;，&ldquo;1997&quot;分别扮演&quot;employee&rdquo;，&ldquo;employer&rdquo;，&ldquo;time&quot;的事件角色。</li>
+<li>UIE<br>
+UIE通过设计的结构提取语言SEL对异构IE结构进行统一建模，使用结构模式指令器SSI为不同IE任务生成目标结构，通过在多个数据集上预训练模型捕获通用IE能力。<br>
+UIE将IE任务统一为seq2seq生成任务，输入为文本形式，输出为对应的结构化信息。<br>
+局限性：由于不同任务的输出模式可能不同，UIE需要针对不同的下游任务进行单独的微调，以生成特定格式的输出。</li>
+<li>USM<br>
+USM将IE任务解耦为结构化和概念化两个基本任务。通过TTL操作结构化信息，获取基本信息单元。通过LTL、TLL操作概念化信息，在label和基本信息单元间建立链接。<br>
+USM基于语义匹配机制，通过比对文本span与语义标签的相似性来完成IE任务。<br>
+局限性：将IE转化为语义匹配任务，难以与生成式语言模型集成；需要对每个单词进行语义匹配，导致训练和推理时间显著增加。</li>
 </ol>
-<p>可以看出，对于不同的IE任务，随着任务目标的变化，需要抽取出的信息的结构也各有不同，例如在NER中要抽取出的是句子中的单词或短语，在RE任务中又需要判断两个实体间的关系。<br>
-因此要完成不同的任务，就需要定义不同的抽取模式(即信息抽取时需要遵循的结构化规则或框架)。<br>
-但可以观察到，这几个任务之间其实是有共通之处的，比如RE，就可以看作是NER任务的进一步扩展。</p>
-<p><strong>是否有办法对这三个任务进行统一建模？</strong></p>
-<p>下面我们来看一下UIE这篇文章。</p>
-<h2 id="unified-structure-generation-for-universal-information-extraction">Unified Structure Generation for Universal Information Extraction
-</h2><p>IE受到其不同目标、异构结构和特定需求模式的影响，此前大多数IE方法都是为不同的任务设计不同的模型，这存在几个问题：</p>
+<p>LLM通过多任务训练和统一编码展现出强大的泛化能力，而有研究表明，LLM在IE任务上仍有显著的性能差距。</p>
+<p>那么，是否有办法激发LLM的潜在知识来完成IE任务？</p>
+<h2 id="instructuie">InstructUIE
+</h2><h3 id="task-schema">Task Schema
+</h3><p>为了更好地转移和利用在预训练语言模型中学习到的知识，将IE任务重新表述为seq2seq形式，并微调LLM。如图所示，每个任务实例都用四个属性格式化：<br>
+<img src="example1.jpg" style="zoom:50%" /></p>
 <ol>
-<li>为大量的IE任务/设置/场景开发专用架构非常复杂(比如单独设计一个模型，专门处理RE任务；单独设计一个模型，专门处理EE任务，听起来就很麻烦)。</li>
-<li>学习孤立的模型严重限制了相关任务和设置之间的知识共享(比如RE任务，NER任务中实体已经抽取好了、类别也标注好了，为什么不能直接用呢)。</li>
-<li>构建专门用于不同IE任务的数据集和知识源既昂贵又耗时(不同任务的数据集的知识是不是可以共享呢)。</li>
+<li>任务指令(Task Instruction)：提供详细的指导，说明如何从输入文本中提取相关信息，并生成所需的输出结构。具体内容包括要提取的信息类型、输出结构的格式以及提取过程中需要遵循的额外约束或规则。</li>
+<li>选项(Options)：定义任务的输出标签约束，表示模型可以为给定输入生成的可能输出集。例如，在命名实体识别(NER)中，选项可能包括&quot;person&quot;、&ldquo;organization&rdquo;、&ldquo;location&quot;等实体标签；在关系提取(RE)中，选项可能代表可以提取的关系类型，如&quot;works for&rdquo;、&ldquo;born in&quot;等；在事件提取(EE)中，选项可能对应不同事件类型的标签，如&quot;beginning&rdquo;、&ldquo;end&quot;等。</li>
+<li>文本(Text)：任务实例的输入句子，与任务指令和选项一起输入预训练的语言模型，使模型能够为给定任务生成所需的输出序列。</li>
+<li>输出(Output)：将样本的原始标签转换为句子格式。对于NER，输出格式为&quot;entity tag: entity span&rdquo;；对于RE，输出格式为&quot;relationship: head entity, tail entity&quot;； 对于EE，输出格式为&quot;event tag: trigger word, argument tag: argument span&quot;； 如果输入中没有与提供选项匹配的结构信息，则输出&quot;None&quot;。</li>
 </ol>
-<p>作者认为，所有IE任务都可以建模为文本到结构(text-to-structure)的转换。</p>
-<h3 id="structured-extraction-language-for-uniform-structure-encoding-sel">Structured Extraction Language for Uniform Structure Encoding (SEL)
-</h3><p>首先，要将不同的IE结构编码成统一的表示，这样就可以在同一个文本-结构的生成框架中对各种IE任务进行统一建模。具体而言，作者将这一转换过程拆分为了两个子操作：<br>
-例：Steve works for Apple.</p>
+<h3 id="auxiliary-tasks">Auxiliary Tasks
+</h3><p>辅助任务，与主任务一起训练。</p>
 <ol>
-<li>定位(Spotting)：在文本中找到特定语义类型的span，将文本中的特定span根据预先定义的语义类型进行标注。例：&ldquo;Steve&quot;被标注为&quot;Person&rdquo;。</li>
-<li>关联(Associating)：对已经定位的span进行关联(例如标记实体对之间的关系)。例：将&quot;Steve&quot;标记为Arg1，&ldquo;Apple&quot;标记为Arg2(类似将&quot;Steve&quot;视为头实体，&ldquo;Apple&quot;视为尾实体)。关联Arg1和Arg2，即判断这两个实体之间的关系，我们将关系标注为&quot;Work-for&rdquo;。</li>
+<li>NER：引入了span extraction task和entity typing task。span extraction task旨在从输入句子中提取实体span，而entity typing task旨在识别实体的类型。</li>
+<li>RE：引入了entity pair extraction task和relation classification task。entity pair extraction task旨在提取关系中涉及的实体对，而relation classification task旨在对实体对之间的关系类型进行分类。</li>
+<li>EE：引入了trigger extraction task和argument extraction task。trigger extraction task旨在提取触发事件的触发词，而argument extraction task旨在提取相关的参数。</li>
 </ol>
-<p>作者使用Spot Name和Asso Name分别表示Spotting和Associating操作。Info Span则表示Spot Name和Asso Name所标记的实际文本信息。<br>
-我们来看作者给出的一个具体示例。<br>
-<img src="SEL_example.jpg" style="zoom:45%" /><br>
-例：对于文本输入&quot;Steve became CEO of Apple in 1997.&quot;，通过SEL生成的结构：</p>
+<h2 id="ie-instructions">IE INSTRUCTIONS
+</h2><p>IE INSTRUCTIONS收集了32个公开可用的数据集，涵盖三种类型的IE任务：NER、RE和EE。除了新闻和维基数据等通用领域的来源之外，还包括来自科学、医疗保健、社交媒体和交通等各个领域的语料库，以确保数据集的多样性。<br>
+数据处理步骤：</p>
 <ol>
-<li>RE(蓝色)：头实体&quot;Steve&rdquo;(Info Span)，类型标注为&quot;person&rdquo;(Spot Name)；尾实体&quot;Apple&quot; (Info Span)，类型标注为&quot;organization&quot;(Spot Name)；关系&quot;work-for&quot;(Asso Name)。</li>
-<li>EE(红色)：触发词&quot;became&quot;(Info Span)，类型标注为&quot;start-position&quot;(Spot Name)。事件下对应的三个论元&quot;Steve&quot; (Info Span)，&ldquo;Apple&rdquo; (Info Span)，&ldquo;1997&rdquo; (Info Span)分别扮演&quot;employee&quot;(Spot Name)，&ldquo;employer&rdquo;(Spot Name)，&ldquo;time&rdquo;(Spot Name)的事件角色。</li>
-<li>NER(黑色)：实体&quot;Steve&quot;(Info Span)，类型标注为&quot;person&quot;(Spot Name)；实体&quot;Apple&quot; (Info Span)，类型标注为&quot;organization&quot;(Spot Name)；实体&quot;1997&quot; (Info Span)，类型标注为&quot;time&quot;(Spot Name)。</li>
+<li>统一不同数据集中语义相同但名称不同的标签的名称。</li>
+<li>将带有下划线、缩写或特殊格式的标签转换为自然语言格式。例如，将标签&quot;people person place of birth&quot;重命名为&quot;place of birth&quot;。</li>
+<li>将所有数据集转换为文本到文本格式，确保所有任务中输入输出对的一致表示。</li>
 </ol>
-<p>这样一来，无论对二元关系，还是N元论元结构，都可以用SEL语法表示。</p>
-<h3 id="structural-schema-instructor-for-controllable-ie-structure-generation-ssi">Structural Schema Instructor for Controllable IE Structure Generation (SSI)
-</h3><p>虽然三个IE任务都可以通过SEL统一表示结构，但模型还不知道什么时候该做什么。<br>
-作者设计了特殊符号[spot], [asso]和[text]，分别添加到每个Spot Name、Asso Name和输入文本序列之前，来提示模型要提取哪些信息。<br>
-<img src="uie_framwork.jpg" style="zoom:42%" /><br>
-具体的例子如图所示，类似于给一个表格让模型去填写表格内容。<br>
-但当需要提取出的信息较多、句子结构比较复杂的情况下，输入序列会变得非常长：<br>
-<img src="example.jpg" style="zoom:37%" /></p>
-<h3 id="structure-generation-with-uie">Structure Generation with UIE
-</h3><p>简单来说，UIE的输入是SSI+Text的形式，输出是用SEL语法表示的结构。UIE整体可以看作是Encoder-Decoder架构的模型：</p>
-<h4 id="encoder">Encoder
-</h4><p>通过Transformer Encoder对SSI $s$和文本序列$x$进行编码，生成hidden representation:
-</p>
-$$
-H = Encoder(s_1, s_2, s_{|s|}, x_1, ..., x_{|x|})
-$$<h4 id="decoder">Decoder
-</h4><p>使用Transformer Decoder以自回归的方式逐步生成目标SEL序列：
-</p>
-$$
-y_i, h_i^d = Decoder([H; h_1^d, ..., h_{i-1}^d])
-$$<p>
-当解码器生成特殊的结束符号&lt;eos&gt;时，解码过程完成。</p>
-<p>作者认为，文本-结构的生成范式将标签视为自然语言标记，这一方法可以有效地转移来自BART、T5等预训练语言模型的知识，相关任务可以很容易地共享知识，因为它们的标签具有相似的语义(例如，location和place)，并共享共同的标签-文本关联(例如，不同事件类型的受害者)。</p>
-<h3 id="pre-training-for-uie">Pre-training for UIE
-</h3><h4 id="预训练数据集">预训练数据集
-</h4><p>包括结构化(例如，知识库)、非结构化(例如，原始文本)和并行(例如，维基百科-维基数据链接)数据：</p>
-<ol>
-<li>$D_{record}$(结构)：$D_{record}$是一个结构数据集，每个实例是一个结构化记录$y$。该数据集从ConceptNet(一个常识知识库)和Wikidata中收集结构化记录。$D_{record}$用于预训练UIE的结构解码能力，帮助模型在理解结构化记录后，能够从这些记录生成有效的输出。</li>
-<li>$D_{text}$(文本)：$D_{text}$是一个非结构化文本数据集，包含英语维基百科中的所有纯文本。$D_{text}$用于预训练UIE的语义编码能力。通过对大规模的非结构化文本进行训练，模型能够更好地理解自然语言的语义、上下文和结构特征。</li>
-<li>$D_{pair}$(文本+结构)：$D_{pair}$是文本-结构的并行数据集，每个实例由一对$(token序列x，结构化记录y)$组成。Dpair用于预训练UIE的文本到结构转换能力，使模型能够理解和处理文本与其对应结构之间的关系。</li>
-</ol>
-<h4 id="预训练任务">预训练任务
-</h4><p>使用三个序列生成任务来预训练UIE：</p>
-<ol>
-<li>Text-to-Structure Pre-training using $D_pair$：$p(y|x,s_meta)$表示在给定文本和模式的条件下生成结构记录$y$的概率。
-$$
-{L}_{\text {Pair}}=\sum_{(x, y) \in \mathcal{D}_{\text {pair}}}-\log p\left(y \mid x, s_{\text {meta}} ; \theta_{e}, \theta_{d}\right)
-$$</li>
-<li>Structure Generation Pre-training with $D_record$：在给定之前生成的token的情况下，预测当前token $y_i$的负对数似然。
-$$
-{L}_{\text {Record}}=\sum_{y \in \mathcal{D}_{\text {record}}}-\log p\left(y_i \mid y_{&lt i}; \theta_{d}\right)
-$$</li>
-<li>Retrofitting Semantic Representation using $D_text$：给定被Mask的源文本，让模型还原被Mask的部分。
-$$
-{L}_{\text {Text}}=\sum_{x \in \mathcal{D}_{\text {text}}}-\log p\left(x^{\prime \prime} \mid x^{\prime} ; \theta_{e}, \theta_{d}\right)
-$$</li>
-</ol>
-<p>最终目标是将上述任务结合起来：
-</p>
-$$
-{L}={L}_{\text {Pair}} + {L}_{\text {Record}} + {L}_{\text {Text}}
-$$<h3 id="fine-tuning-for-uie">Fine-tuning for UIE
-</h3><p>给定一个标记语料库$D_task={(s, x, y)}$，使用teacher-forcing cross-entropy loss来微调UIE模型：
-</p>
-$$
-{L}_{FT}=\sum_{(s, x, y) \in \mathcal{D}_{\text {Task}}}-\log p\left(y \mid x, s; \theta_{e}, \theta_{d}\right)
-$$<p>
-为了缓解暴露偏差，在解码过程中，作者还设计了一种拒绝机制。给定实例$(s, x, y)$，使用SEL对$y$进行编码，随机加入$[NULL]$噪声。具体示例如图所示：<br>
-<img src="noise_example.jpg" style="zoom:45%" /><br>
-句子中没有facility实体，在模型学习时随机注入&quot;(facility：[NULL])&ldquo;的噪声。通过这种方式，UIE可以通过生成[NULL]来有效地学习拒绝误导生成。</p>
-<h2 id="experiment">Experiment
-</h2><img src="main_result.jpg" style="zoom:58%" />   
-<p>可以看到，UIE在多个任务上SOTA。<br>
-ps：其他的实验结果具体可以看原文，在这里就不详细说明了。</p>
+<p>数据集构成如图所示：<br>
+<img src="dataset.jpg" style="zoom:50%" /></p>
+<h2 id="experiments">Experiments
+</h2><p>backbone：FlanT5-11B</p>
+<h3 id="supervised-experiments">Supervised Experiments
+</h3><p>Supervised学习设置：在训练期间为所有任务提供指令，模型在每个任务的标注数据上进行微调，使其能够学习特定任务的特征。为了平衡数据集，作者采用了抽样策略。即为每个数据集采样10,000个示例，少于10,000个样本的数据集使用所有示例。<br>
+<img src="supervised_experiment1.jpg" style="zoom:65%" /><br>
+<img src="supervised_experiment2.jpg" style="zoom:53%" /><br>
+<img src="supervised_experiment3.jpg" style="zoom:57%" /></p>
+<h3 id="zero-shot-experiments">Zero-shot Experiments
+</h3><p>Zero-shot学习设置：在训练期间仅为部分任务提供指令，模型在未见过的任务上进行评估，无需额外的微调。作者在18个NER数据集和6个RE数据集上训练了模型，并在7个NER数据集和2个RE数据集上进行测试(训练阶段删除了zero-shot实验需要测试的数据集)。<br>
+<img src="zero_shot_experiment1.jpg" style="zoom:60%" /><br>
+<img src="zero_shot_experiment2.jpg" style="zoom:60%" /><br>
+<img src="zero_shot_experiment3.jpg" style="zoom:60%" /></p>
+<p>ps：详细的实验结果可以查看原文。</p>
 <h2 id="conclusion">Conclusion
-</h2><p>提出了一个统一的文本到结构生成框架——UIE(T5+结构化生成)，它可以通用地建模不同的IE任务，自适应地生成有针对性的结构，并从不同的知识源中学习通用的IE能力：</p>
-<ol>
-<li>多样化的目标结构 &mdash;&gt; SEL统一编码异构抽取结构</li>
-<li>需求特定的抽取模式 &mdash;&gt; 基于模式的提示机制SSI</li>
-<li>不同任务之间知识难以共享 &mdash;&gt; 在包含多个任务的数据集上预训练模型</li>
+</h2><ol>
+<li>提出了UIE的一个End-to-End框架——InstructUIE，它利用自然语言指令来指导IE任务。</li>
+<li>引入新的基准数据集IE INSTRUCTIONS。该基准由32个不同的信息提取数据集组成，这些数据集已统一为文本到文本格式，允许对各种IE任务进行一致和标准化的评估。</li>
+<li>实验结果表明，InstructUIE在监督和zero-shot下实现了SOTA，使用单个多任务模型解决了多个任务。</li>
 </ol>
 
 </section>
@@ -528,30 +468,6 @@ ps：其他的实验结果具体可以看原文，在这里就不详细说明了
             
                 
 <article class="has-image">
-    <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/">
-        
-        
-            <div class="article-image">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.3b2dded8323e2cf89fe59a4eece86721_hu18325295463674673063.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction"
-                        
-                        data-hash="md5-Oy3e2DI&#43;LPif5ZpO7OhnIQ==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
     <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/">
         
         
@@ -569,6 +485,30 @@ ps：其他的实验结果具体可以看原文，在这里就不详细说明了
 
         <div class="article-details">
             <h2 class="article-title">通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork.a2b90c7f6340d67963e25ce5629387ad_hu1809530813427398173.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 通用信息抽取1 | Unified Structure Generation for Universal Information Extraction"
+                        
+                        data-hash="md5-orkMf2NA1nlj4lzlYpOHrQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</h2>
         </div>
     </a>
 </article>

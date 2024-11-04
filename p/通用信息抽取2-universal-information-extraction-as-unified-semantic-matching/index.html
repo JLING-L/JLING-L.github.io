@@ -344,7 +344,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 11 分钟
+                    阅读时长: 12 分钟
                 </time>
             </div>
         
@@ -373,10 +373,10 @@ Accepted by AAAI2023</p>
 </h2><h3 id="schema-text-joint-embedding">Schema-Text Joint Embedding
 </h3><p>为了让模型理解标签模式(schema)和文本之间的关联(同时捕捉标签和文本之间的语义关系)，USM对提取模式(schema)和文本token进行共同编码，从而生成它们的联合上下文嵌入：</p>
 <ol>
-<li>提取模式词序列化：USM将提取模式（schema）表示为一个词序列。例如，如果提取模式是“person”和“location”这样的标签，USM会将这些标签转换为词序列形式，即{$l_1,l_2,&hellip;,l_{|l|}$}。(类似文本token)</li>
+<li>提取模式词序列化：USM将提取模式(schema)表示为一个词序列。例如，如果提取模式是&quot;person&quot;和&quot;location&quot;这样的标签，USM会将这些标签转换为词序列形式，即{$l_1,l_2,&hellip;,l_{|l|}$}。(类似文本token)</li>
 <li>拼接schema和文本：USM将词序列化后的schema sequence与文本token{$t_1,t_2,&hellip;,t_{|t|}$}进行拼接，一起作为模型的输入。</li>
 <li>Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为$[h_1,h_2,&hellip;,h_{|l|+|t|]$。</li>
-<li>Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相“看到”(self-attention)，从而捕捉它们之间的交互关系。</li>
+<li>Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相&quot;看到&quot;(self-attention)，从而捕捉它们之间的交互关系。</li>
 </ol>
 <p>最终，联合标签-文本嵌入可以表示为：
 </p>
@@ -392,15 +392,15 @@ $$<h3 id="token-linking-operations">Token Linking Operations
 <p>其中，结构化通过Token-Token Linking (TTL)操作实现，概念化通过Label-Token Linking (LTL)和Token-Label Linking (TLL)操作实现。</p>
 <h4 id="token-token-linking-for-structuring-ttl">Token-Token Linking for Structuring (TTL)
 </h4><p>前面我们提到，结构化的目标是要提取出文本中的基本信息单元(如实体、关系、触发词等)。这些基本信息单元是一组连续的token序列，我们需要知道单个信息单元是从哪里开始、又从哪里结束。<br>
-而部分IE任务所需的结构可能包括不止一个信息单元，例如{“Monet”, birth place, “Paris”}就是一个三元组的形式，此时，我们则需要找到Subject-Object对。<br>
+而部分IE任务所需的结构可能包括不止一个信息单元，例如{&ldquo;Monet&rdquo;, birth place, &ldquo;Paris&rdquo;}就是一个三元组的形式，此时，我们则需要找到Subject-Object对。<br>
 作者设计了TTL操作，从两个方面对输入文本中所有有效的子结构进行构造：</p>
 <ol>
-<li>Utterance(文本)：指输入文本中的连续token序列，例如实体(如“Monet”)或事件触发词(如“born in”)。
+<li>Utterance(文本)：指输入文本中的连续token序列，例如实体(如&quot;Monet&quot;)或事件触发词(如&quot;born in&quot;)。
 <img src="TTL_example1.jpg" style="zoom:40%" /><br>
-如图所示，其实就是将头和尾链接(H2T)。例如，为了提取span“Monet”和“born in”作为有效的子结构，USM利用H2T将“Monet”链接到自身来提取“Monet”，并将“born”链接到“in”以提取“born in”。</li>
-<li>Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如“Monet”和“Paris”)或事件触发词-参数对(如“born in”和“Paris”)。
+如图所示，其实就是将头和尾链接(H2T)。例如，为了提取span&quot;Monet&quot;和&quot;born in&quot;作为有效的子结构，USM利用H2T将&quot;Monet&quot;链接到自身来提取&quot;Monet&quot;，并将&quot;born&quot;链接到&quot;in&quot;以提取&quot;born in&quot;。</li>
+<li>Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如&quot;Monet&quot;和&quot;Paris&quot;)或事件触发词-参数对(如&quot;born in&quot;和&quot;Paris&quot;)。
 <img src="TTL_example2.jpg" style="zoom:40%" /><br>
-如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对“Monet”和“Paris”，USM通过H2H将“Monet”和“Paris”链接起来，同时也通过T2T链接这两个token。</li>
+如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对&quot;Monet&quot;和&quot;Paris&quot;，USM通过H2H将&quot;Monet&quot;和&quot;Paris&quot;链接起来，同时也通过T2T链接这两个token。</li>
 </ol>
 <p>USM通过计算每对有效token对$&lt;t_i,t_j&gt;$的链接分数$s_{TTL}(t_i,t_j)$(表示token之间的相似度或相关性，高分数意味着这两个token在上下文中有较强的关联性，适合进行链接)来实现上述的H2T、H2H和T2T链接操作。链接分数的计算公式如下：<br>
 </p>
@@ -412,8 +412,8 @@ $$<p>
 </h4><p>结构化是从Utterance和Association Pair两个方面来进行处理的，概念化也是如此。首先考虑Utterance的概念化，包括两种类型：<br>
 <img src="LTL_example.jpg" style="zoom:40%" /></p>
 <ol>
-<li>Type of Mention：将标签类型直接分配给span。例如，将实体“Monet”标记为类型“person”，“France”标记为类型“country”。</li>
-<li>Predicate of Object：将关系标签分配给Association Pair中的Object。例如，“Paris”的关系类型“birth place”，事件参数类型“capital”。
+<li>Type of Mention：将标签类型直接分配给span。例如，将实体&quot;Monet&quot;标记为类型&quot;person&quot;，&ldquo;France&quot;标记为类型&quot;country&rdquo;。</li>
+<li>Predicate of Object：将关系标签分配给Association Pair中的Object。例如，&ldquo;Paris&quot;的关系类型&quot;birth place&rdquo;，事件参数类型&quot;capital&quot;。
 用label-to-head(L2H)和label-to-tail(L2T)链接操作来为每个子结构分配标签(其实也是头对头、尾对尾，只是不是将信息单元进行链接了，而是将标签与信息单元进行链接)。链接分数的计算公式如下：
 $$
 s_{LTL}(l_i,t_j) = FFNN_{LTL}^{label}(h_i^l)^TR_{j-i}FFNN_{LTL}^{Text}(h_j^t)
@@ -433,12 +433,12 @@ $$<h3 id="schema-text-joint-embedding-1">Schema-Text Joint Embedding
 </h3><p>通过schema-constraint解码，如图所示：<br>
 <img src="framework.jpg" style="zoom:60%" /></p>
 <ol>
-<li>通过TTL操作提取的内容：例如，{“Monet”, “Paris”, “France”, (“Monet”, “Pairs”), (“France”, “Pairs”)}，抽取得到“Monet”和“Paris”，以及Subject-Object对(“Monet”, “Paris”)和(“France”, “Paris”)。</li>
-<li>通过LTL操作提取的内容：例如，{(person, “Monet”), (country, “France”), (birth place, “Paris”), (capital, “Paris”)}，每个label(如person、country)都与相应的Object(如“Monet”、“France”)相关联。</li>
-<li>通过TLL操作提取的内容：例如，(“Monet”, birth place), (“France”, capital)，将Subject与其相应的关系label(如birth place、capital)联系起来。</li>
-<li>基于获得的label-token间的链接(例如“Monet”与“birth place”以及“France”与“capital”)，USM能够一致地生成完整的结构，例如：(“Monet”, birth place, “Paris”)和(“France”, capital, “Paris”)。</li>
+<li>通过TTL操作提取的内容：例如，{&ldquo;Monet&rdquo;, &ldquo;Paris&rdquo;, &ldquo;France&rdquo;, (&ldquo;Monet&rdquo;, &ldquo;Pairs&rdquo;), (&ldquo;France&rdquo;, &ldquo;Pairs&rdquo;)}，抽取得到&quot;Monet&quot;和&quot;Paris&quot;，以及Subject-Object对(&ldquo;Monet&rdquo;, &ldquo;Paris&rdquo;)和(&ldquo;France&rdquo;, &ldquo;Paris&rdquo;)。</li>
+<li>通过LTL操作提取的内容：例如，{(person, &ldquo;Monet&rdquo;), (country, &ldquo;France&rdquo;), (birth place, &ldquo;Paris&rdquo;), (capital, &ldquo;Paris&rdquo;)}，每个label(如person、country)都与相应的Object(如&quot;Monet&quot;、&ldquo;France&rdquo;)相关联。</li>
+<li>通过TLL操作提取的内容：例如，(&ldquo;Monet&rdquo;, birth place), (&ldquo;France&rdquo;, capital)，将Subject与其相应的关系label(如birth place、capital)联系起来。</li>
+<li>基于获得的label-token间的链接(例如&quot;Monet&quot;与&quot;birth place&quot;以及&quot;France&quot;与&quot;capital&quot;)，USM能够一致地生成完整的结构，例如：(&ldquo;Monet&rdquo;, birth place, &ldquo;Paris&rdquo;)和(&ldquo;France&rdquo;, capital, &ldquo;Paris&rdquo;)。</li>
 </ol>
-<p>这些解码步骤之间是独立的，这意味着提取操作是完全非自回归的（non-autoregressive），这使得解码过程可以并行进行。</p>
+<p>这些解码步骤之间是独立的，这意味着提取操作是完全非自回归的(non-autoregressive)，这使得解码过程可以并行进行。</p>
 <h2 id="learning-from-heterogeneous-supervision">Learning from Heterogeneous Supervision
 </h2><p>USM使用了标签的词序列化表示(verbalized label representation)和统一的token链接机制，不论资源的来源或类型如何，USM将它们统一表示为&lt;text, token pairs&gt;进行预训练。</p>
 <h3 id="pre-training">Pre-training
@@ -536,6 +536,30 @@ USM(356M)以较小的模型大小优于强zero-shot基线GPT-3(175B)和DEEPSTRUC
     <h2 class="section-title">相关文章</h2>
     <div class="related-content">
         <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.3b2dded8323e2cf89fe59a4eece86721_hu18325295463674673063.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction"
+                        
+                        data-hash="md5-Oy3e2DI&#43;LPif5ZpO7OhnIQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</h2>
+        </div>
+    </a>
+</article>
+
             
                 
 <article class="has-image">

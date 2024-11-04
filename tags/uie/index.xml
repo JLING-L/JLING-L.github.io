@@ -7,7 +7,78 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>JLING-L</copyright>
-        <lastBuildDate>Sun, 03 Nov 2024 09:27:34 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/tags/uie/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 04 Nov 2024 13:31:44 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/tags/uie/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</title>
+        <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</link>
+        <pubDate>Mon, 04 Nov 2024 13:31:44 +0800</pubDate>
+        
+        <guid>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</guid>
+        <description>&lt;img src="https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg" alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:70%&#34; /&gt;
+&lt;p&gt;论文：https://arxiv.org/abs/2304.08085&lt;br&gt;
+代码：https://github.com/BeyonderXX/InstructUIE&lt;/p&gt;
+&lt;img src=&#34;introduction.jpg&#34; style=&#34;zoom:60%&#34; /&gt;
+&lt;p&gt;之前的笔记中我们介绍了UIE(通用信息抽取1)和USM(通用信息抽取2)。我们先回顾一下这两篇工作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;UIE&lt;br&gt;
+UIE通过设计的结构提取语言SEL对异构IE结构进行统一建模，使用结构模式指令器SSI为不同IE任务生成目标结构，通过在多个数据集上预训练模型捕获通用IE能力。&lt;br&gt;
+UIE将IE任务统一为seq2seq生成任务，输入为文本形式，输出为对应的结构化信息。&lt;br&gt;
+局限性：由于不同任务的输出模式可能不同，UIE需要针对不同的下游任务进行单独的微调，以生成特定格式的输出。&lt;/li&gt;
+&lt;li&gt;USM&lt;br&gt;
+USM将IE任务解耦为结构化和概念化两个基本任务。通过TTL操作结构化信息，获取基本信息单元。通过LTL、TLL操作概念化信息，在label和基本信息单元间建立链接。&lt;br&gt;
+USM基于语义匹配机制，通过比对文本span与语义标签的相似性来完成IE任务。&lt;br&gt;
+局限性：将IE转化为语义匹配任务，难以与生成式语言模型集成；需要对每个单词进行语义匹配，导致训练和推理时间显著增加。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;LLM通过多任务训练和统一编码展现出强大的泛化能力，而有研究表明，LLM在IE任务上仍有显著的性能差距。&lt;/p&gt;
+&lt;p&gt;那么，是否有办法激发LLM的潜在知识来完成IE任务？&lt;/p&gt;
+&lt;h2 id=&#34;instructuie&#34;&gt;InstructUIE
+&lt;/h2&gt;&lt;h3 id=&#34;task-schema&#34;&gt;Task Schema
+&lt;/h3&gt;&lt;p&gt;为了更好地转移和利用在预训练语言模型中学习到的知识，将IE任务重新表述为seq2seq形式，并微调LLM。如图所示，每个任务实例都用四个属性格式化：&lt;br&gt;
+&lt;img src=&#34;example1.jpg&#34; style=&#34;zoom:50%&#34; /&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;任务指令(Task Instruction)：提供详细的指导，说明如何从输入文本中提取相关信息，并生成所需的输出结构。具体内容包括要提取的信息类型、输出结构的格式以及提取过程中需要遵循的额外约束或规则。&lt;/li&gt;
+&lt;li&gt;选项(Options)：定义任务的输出标签约束，表示模型可以为给定输入生成的可能输出集。例如，在命名实体识别(NER)中，选项可能包括&amp;quot;person&amp;quot;、&amp;ldquo;organization&amp;rdquo;、&amp;ldquo;location&amp;quot;等实体标签；在关系提取(RE)中，选项可能代表可以提取的关系类型，如&amp;quot;works for&amp;rdquo;、&amp;ldquo;born in&amp;quot;等；在事件提取(EE)中，选项可能对应不同事件类型的标签，如&amp;quot;beginning&amp;rdquo;、&amp;ldquo;end&amp;quot;等。&lt;/li&gt;
+&lt;li&gt;文本(Text)：任务实例的输入句子，与任务指令和选项一起输入预训练的语言模型，使模型能够为给定任务生成所需的输出序列。&lt;/li&gt;
+&lt;li&gt;输出(Output)：将样本的原始标签转换为句子格式。对于NER，输出格式为&amp;quot;entity tag: entity span&amp;rdquo;；对于RE，输出格式为&amp;quot;relationship: head entity, tail entity&amp;quot;； 对于EE，输出格式为&amp;quot;event tag: trigger word, argument tag: argument span&amp;quot;； 如果输入中没有与提供选项匹配的结构信息，则输出&amp;quot;None&amp;quot;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;auxiliary-tasks&#34;&gt;Auxiliary Tasks
+&lt;/h3&gt;&lt;p&gt;辅助任务，与主任务一起训练。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;NER：引入了span extraction task和entity typing task。span extraction task旨在从输入句子中提取实体span，而entity typing task旨在识别实体的类型。&lt;/li&gt;
+&lt;li&gt;RE：引入了entity pair extraction task和relation classification task。entity pair extraction task旨在提取关系中涉及的实体对，而relation classification task旨在对实体对之间的关系类型进行分类。&lt;/li&gt;
+&lt;li&gt;EE：引入了trigger extraction task和argument extraction task。trigger extraction task旨在提取触发事件的触发词，而argument extraction task旨在提取相关的参数。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;ie-instructions&#34;&gt;IE INSTRUCTIONS
+&lt;/h2&gt;&lt;p&gt;IE INSTRUCTIONS收集了32个公开可用的数据集，涵盖三种类型的IE任务：NER、RE和EE。除了新闻和维基数据等通用领域的来源之外，还包括来自科学、医疗保健、社交媒体和交通等各个领域的语料库，以确保数据集的多样性。&lt;br&gt;
+数据处理步骤：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;统一不同数据集中语义相同但名称不同的标签的名称。&lt;/li&gt;
+&lt;li&gt;将带有下划线、缩写或特殊格式的标签转换为自然语言格式。例如，将标签&amp;quot;people person place of birth&amp;quot;重命名为&amp;quot;place of birth&amp;quot;。&lt;/li&gt;
+&lt;li&gt;将所有数据集转换为文本到文本格式，确保所有任务中输入输出对的一致表示。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;数据集构成如图所示：&lt;br&gt;
+&lt;img src=&#34;dataset.jpg&#34; style=&#34;zoom:50%&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;experiments&#34;&gt;Experiments
+&lt;/h2&gt;&lt;p&gt;backbone：FlanT5-11B&lt;/p&gt;
+&lt;h3 id=&#34;supervised-experiments&#34;&gt;Supervised Experiments
+&lt;/h3&gt;&lt;p&gt;Supervised学习设置：在训练期间为所有任务提供指令，模型在每个任务的标注数据上进行微调，使其能够学习特定任务的特征。为了平衡数据集，作者采用了抽样策略。即为每个数据集采样10,000个示例，少于10,000个样本的数据集使用所有示例。&lt;br&gt;
+&lt;img src=&#34;supervised_experiment1.jpg&#34; style=&#34;zoom:65%&#34; /&gt;&lt;br&gt;
+&lt;img src=&#34;supervised_experiment2.jpg&#34; style=&#34;zoom:53%&#34; /&gt;&lt;br&gt;
+&lt;img src=&#34;supervised_experiment3.jpg&#34; style=&#34;zoom:57%&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;zero-shot-experiments&#34;&gt;Zero-shot Experiments
+&lt;/h3&gt;&lt;p&gt;Zero-shot学习设置：在训练期间仅为部分任务提供指令，模型在未见过的任务上进行评估，无需额外的微调。作者在18个NER数据集和6个RE数据集上训练了模型，并在7个NER数据集和2个RE数据集上进行测试(训练阶段删除了zero-shot实验需要测试的数据集)。&lt;br&gt;
+&lt;img src=&#34;zero_shot_experiment1.jpg&#34; style=&#34;zoom:60%&#34; /&gt;&lt;br&gt;
+&lt;img src=&#34;zero_shot_experiment2.jpg&#34; style=&#34;zoom:60%&#34; /&gt;&lt;br&gt;
+&lt;img src=&#34;zero_shot_experiment3.jpg&#34; style=&#34;zoom:60%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;ps：详细的实验结果可以查看原文。&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;提出了UIE的一个End-to-End框架——InstructUIE，它利用自然语言指令来指导IE任务。&lt;/li&gt;
+&lt;li&gt;引入新的基准数据集IE INSTRUCTIONS。该基准由32个不同的信息提取数据集组成，这些数据集已统一为文本到文本格式，允许对各种IE任务进行一致和标准化的评估。&lt;/li&gt;
+&lt;li&gt;实验结果表明，InstructUIE在监督和zero-shot下实现了SOTA，使用单个多任务模型解决了多个任务。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching</title>
         <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/</link>
         <pubDate>Sun, 03 Nov 2024 09:27:34 +0800</pubDate>
@@ -27,10 +98,10 @@ Accepted by AAAI2023&lt;/p&gt;
 &lt;/h2&gt;&lt;h3 id=&#34;schema-text-joint-embedding&#34;&gt;Schema-Text Joint Embedding
 &lt;/h3&gt;&lt;p&gt;为了让模型理解标签模式(schema)和文本之间的关联(同时捕捉标签和文本之间的语义关系)，USM对提取模式(schema)和文本token进行共同编码，从而生成它们的联合上下文嵌入：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;提取模式词序列化：USM将提取模式（schema）表示为一个词序列。例如，如果提取模式是“person”和“location”这样的标签，USM会将这些标签转换为词序列形式，即{$l_1,l_2,&amp;hellip;,l_{|l|}$}。(类似文本token)&lt;/li&gt;
+&lt;li&gt;提取模式词序列化：USM将提取模式(schema)表示为一个词序列。例如，如果提取模式是&amp;quot;person&amp;quot;和&amp;quot;location&amp;quot;这样的标签，USM会将这些标签转换为词序列形式，即{$l_1,l_2,&amp;hellip;,l_{|l|}$}。(类似文本token)&lt;/li&gt;
 &lt;li&gt;拼接schema和文本：USM将词序列化后的schema sequence与文本token{$t_1,t_2,&amp;hellip;,t_{|t|}$}进行拼接，一起作为模型的输入。&lt;/li&gt;
 &lt;li&gt;Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为$[h_1,h_2,&amp;hellip;,h_{|l|+|t|]$。&lt;/li&gt;
-&lt;li&gt;Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相“看到”(self-attention)，从而捕捉它们之间的交互关系。&lt;/li&gt;
+&lt;li&gt;Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相&amp;quot;看到&amp;quot;(self-attention)，从而捕捉它们之间的交互关系。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;最终，联合标签-文本嵌入可以表示为：
 &lt;/p&gt;
@@ -46,15 +117,15 @@ $$&lt;h3 id=&#34;token-linking-operations&#34;&gt;Token Linking Operations
 &lt;p&gt;其中，结构化通过Token-Token Linking (TTL)操作实现，概念化通过Label-Token Linking (LTL)和Token-Label Linking (TLL)操作实现。&lt;/p&gt;
 &lt;h4 id=&#34;token-token-linking-for-structuring-ttl&#34;&gt;Token-Token Linking for Structuring (TTL)
 &lt;/h4&gt;&lt;p&gt;前面我们提到，结构化的目标是要提取出文本中的基本信息单元(如实体、关系、触发词等)。这些基本信息单元是一组连续的token序列，我们需要知道单个信息单元是从哪里开始、又从哪里结束。&lt;br&gt;
-而部分IE任务所需的结构可能包括不止一个信息单元，例如{“Monet”, birth place, “Paris”}就是一个三元组的形式，此时，我们则需要找到Subject-Object对。&lt;br&gt;
+而部分IE任务所需的结构可能包括不止一个信息单元，例如{&amp;ldquo;Monet&amp;rdquo;, birth place, &amp;ldquo;Paris&amp;rdquo;}就是一个三元组的形式，此时，我们则需要找到Subject-Object对。&lt;br&gt;
 作者设计了TTL操作，从两个方面对输入文本中所有有效的子结构进行构造：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;Utterance(文本)：指输入文本中的连续token序列，例如实体(如“Monet”)或事件触发词(如“born in”)。
+&lt;li&gt;Utterance(文本)：指输入文本中的连续token序列，例如实体(如&amp;quot;Monet&amp;quot;)或事件触发词(如&amp;quot;born in&amp;quot;)。
 &lt;img src=&#34;TTL_example1.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;br&gt;
-如图所示，其实就是将头和尾链接(H2T)。例如，为了提取span“Monet”和“born in”作为有效的子结构，USM利用H2T将“Monet”链接到自身来提取“Monet”，并将“born”链接到“in”以提取“born in”。&lt;/li&gt;
-&lt;li&gt;Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如“Monet”和“Paris”)或事件触发词-参数对(如“born in”和“Paris”)。
+如图所示，其实就是将头和尾链接(H2T)。例如，为了提取span&amp;quot;Monet&amp;quot;和&amp;quot;born in&amp;quot;作为有效的子结构，USM利用H2T将&amp;quot;Monet&amp;quot;链接到自身来提取&amp;quot;Monet&amp;quot;，并将&amp;quot;born&amp;quot;链接到&amp;quot;in&amp;quot;以提取&amp;quot;born in&amp;quot;。&lt;/li&gt;
+&lt;li&gt;Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;)或事件触发词-参数对(如&amp;quot;born in&amp;quot;和&amp;quot;Paris&amp;quot;)。
 &lt;img src=&#34;TTL_example2.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;br&gt;
-如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对“Monet”和“Paris”，USM通过H2H将“Monet”和“Paris”链接起来，同时也通过T2T链接这两个token。&lt;/li&gt;
+如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;，USM通过H2H将&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;链接起来，同时也通过T2T链接这两个token。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;USM通过计算每对有效token对$&amp;lt;t_i,t_j&amp;gt;$的链接分数$s_{TTL}(t_i,t_j)$(表示token之间的相似度或相关性，高分数意味着这两个token在上下文中有较强的关联性，适合进行链接)来实现上述的H2T、H2H和T2T链接操作。链接分数的计算公式如下：&lt;br&gt;
 &lt;/p&gt;
@@ -66,8 +137,8 @@ $$&lt;p&gt;
 &lt;/h4&gt;&lt;p&gt;结构化是从Utterance和Association Pair两个方面来进行处理的，概念化也是如此。首先考虑Utterance的概念化，包括两种类型：&lt;br&gt;
 &lt;img src=&#34;LTL_example.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;Type of Mention：将标签类型直接分配给span。例如，将实体“Monet”标记为类型“person”，“France”标记为类型“country”。&lt;/li&gt;
-&lt;li&gt;Predicate of Object：将关系标签分配给Association Pair中的Object。例如，“Paris”的关系类型“birth place”，事件参数类型“capital”。
+&lt;li&gt;Type of Mention：将标签类型直接分配给span。例如，将实体&amp;quot;Monet&amp;quot;标记为类型&amp;quot;person&amp;quot;，&amp;ldquo;France&amp;quot;标记为类型&amp;quot;country&amp;rdquo;。&lt;/li&gt;
+&lt;li&gt;Predicate of Object：将关系标签分配给Association Pair中的Object。例如，&amp;ldquo;Paris&amp;quot;的关系类型&amp;quot;birth place&amp;rdquo;，事件参数类型&amp;quot;capital&amp;quot;。
 用label-to-head(L2H)和label-to-tail(L2T)链接操作来为每个子结构分配标签(其实也是头对头、尾对尾，只是不是将信息单元进行链接了，而是将标签与信息单元进行链接)。链接分数的计算公式如下：
 $$
 s_{LTL}(l_i,t_j) = FFNN_{LTL}^{label}(h_i^l)^TR_{j-i}FFNN_{LTL}^{Text}(h_j^t)
@@ -87,12 +158,12 @@ $$&lt;h3 id=&#34;schema-text-joint-embedding-1&#34;&gt;Schema-Text Joint Embeddi
 &lt;/h3&gt;&lt;p&gt;通过schema-constraint解码，如图所示：&lt;br&gt;
 &lt;img src=&#34;framework.jpg&#34; style=&#34;zoom:60%&#34; /&gt;&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;通过TTL操作提取的内容：例如，{“Monet”, “Paris”, “France”, (“Monet”, “Pairs”), (“France”, “Pairs”)}，抽取得到“Monet”和“Paris”，以及Subject-Object对(“Monet”, “Paris”)和(“France”, “Paris”)。&lt;/li&gt;
-&lt;li&gt;通过LTL操作提取的内容：例如，{(person, “Monet”), (country, “France”), (birth place, “Paris”), (capital, “Paris”)}，每个label(如person、country)都与相应的Object(如“Monet”、“France”)相关联。&lt;/li&gt;
-&lt;li&gt;通过TLL操作提取的内容：例如，(“Monet”, birth place), (“France”, capital)，将Subject与其相应的关系label(如birth place、capital)联系起来。&lt;/li&gt;
-&lt;li&gt;基于获得的label-token间的链接(例如“Monet”与“birth place”以及“France”与“capital”)，USM能够一致地生成完整的结构，例如：(“Monet”, birth place, “Paris”)和(“France”, capital, “Paris”)。&lt;/li&gt;
+&lt;li&gt;通过TTL操作提取的内容：例如，{&amp;ldquo;Monet&amp;rdquo;, &amp;ldquo;Paris&amp;rdquo;, &amp;ldquo;France&amp;rdquo;, (&amp;ldquo;Monet&amp;rdquo;, &amp;ldquo;Pairs&amp;rdquo;), (&amp;ldquo;France&amp;rdquo;, &amp;ldquo;Pairs&amp;rdquo;)}，抽取得到&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;，以及Subject-Object对(&amp;ldquo;Monet&amp;rdquo;, &amp;ldquo;Paris&amp;rdquo;)和(&amp;ldquo;France&amp;rdquo;, &amp;ldquo;Paris&amp;rdquo;)。&lt;/li&gt;
+&lt;li&gt;通过LTL操作提取的内容：例如，{(person, &amp;ldquo;Monet&amp;rdquo;), (country, &amp;ldquo;France&amp;rdquo;), (birth place, &amp;ldquo;Paris&amp;rdquo;), (capital, &amp;ldquo;Paris&amp;rdquo;)}，每个label(如person、country)都与相应的Object(如&amp;quot;Monet&amp;quot;、&amp;ldquo;France&amp;rdquo;)相关联。&lt;/li&gt;
+&lt;li&gt;通过TLL操作提取的内容：例如，(&amp;ldquo;Monet&amp;rdquo;, birth place), (&amp;ldquo;France&amp;rdquo;, capital)，将Subject与其相应的关系label(如birth place、capital)联系起来。&lt;/li&gt;
+&lt;li&gt;基于获得的label-token间的链接(例如&amp;quot;Monet&amp;quot;与&amp;quot;birth place&amp;quot;以及&amp;quot;France&amp;quot;与&amp;quot;capital&amp;quot;)，USM能够一致地生成完整的结构，例如：(&amp;ldquo;Monet&amp;rdquo;, birth place, &amp;ldquo;Paris&amp;rdquo;)和(&amp;ldquo;France&amp;rdquo;, capital, &amp;ldquo;Paris&amp;rdquo;)。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;这些解码步骤之间是独立的，这意味着提取操作是完全非自回归的（non-autoregressive），这使得解码过程可以并行进行。&lt;/p&gt;
+&lt;p&gt;这些解码步骤之间是独立的，这意味着提取操作是完全非自回归的(non-autoregressive)，这使得解码过程可以并行进行。&lt;/p&gt;
 &lt;h2 id=&#34;learning-from-heterogeneous-supervision&#34;&gt;Learning from Heterogeneous Supervision
 &lt;/h2&gt;&lt;p&gt;USM使用了标签的词序列化表示(verbalized label representation)和统一的token链接机制，不论资源的来源或类型如何，USM将它们统一表示为&amp;lt;text, token pairs&amp;gt;进行预训练。&lt;/p&gt;
 &lt;h3 id=&#34;pre-training&#34;&gt;Pre-training
