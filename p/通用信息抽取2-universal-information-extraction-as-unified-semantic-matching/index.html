@@ -444,13 +444,13 @@ $$<h3 id="schema-text-joint-embedding-1">Schema-Text Joint Embedding
 <h3 id="pre-training">Pre-training
 </h3><p>异构监督资源(来源不同、类型多样的训练数据)包括任务注释信号(例如，IE数据集)、远程信号(例如，远程监督数据集)和间接信号(例如，QA数据集)三种不同类型：</p>
 <ol>
-<li>$D_{task}$(任务标注数据集)
+<li>$D_{task}$(任务标注数据集)<br>
 其中每个实例都有一个用于信息提取的标准注释。本文使用在信息提取领域广泛使用的Ontonotes作为标准注释，它包含18种实体类型。
 任务标注数据集用于帮助模型学习任务特定的结构化和概念化能力。即通过这些标注数据，模型可以学习如何准确地从文本中提取特定类型的实体和关系。</li>
-<li>$D_{distant}$(远程监督数据集)
+<li>$D_{distant}$(远程监督数据集)<br>
 远程监督数据集是通过将文本与知识库对齐来生成的标注数据。本文使用NYT和Rebel作为远程监督数据集，这些数据集分别是通过将文本与Freebase和Wikidata对齐而获得。由于Rebel数据集的标签模式过长，不适合直接与输入文本拼接并输入到预训练的Transformer编码器中。因此，本文采样了负标签(与输入文本的实际内容没有对应关系的标签)模式构建meta schema，简化预训练时的标签模式。
 远程监督数据为模型提供大规模的训练数据，帮助模型学习广泛的结构和概念化能力。</li>
-<li>$D_{indirect}$(间接监督数据集)
+<li>$D_{indirect}$(间接监督数据集)<br>
 间接监督数据集来自与信息抽取相关的其他NLP任务，主要是阅读理解数据集。本文使用MRQA中的阅读理解数据集，如HotpotQA、Natural Questions、NewsQA、SQuAD、TriviaQA等。
 间接监督数据集通过多样化的问题表达，提供了比$D_{task}$和$D_{distant}$更多样化的标签语义信息，有助于模型学习更丰富的概念化能力(增强泛化能力)。对于每个(question，context，answer)实例，问题作为label schema，context作为输入文本，answer作为mention。</li>
 </ol>
@@ -482,7 +482,7 @@ USM(356M)以较小的模型大小优于强zero-shot基线GPT-3(175B)和DEEPSTRUC
 </ol>
 <h2 id="references">References
 </h2><p>[1] <a class="link" href="https://blog.csdn.net/qq_27590277/article/details/128699655?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522A7AAA045-C8D2-470D-8CB4-6FB0D7220C7D%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=A7AAA045-C8D2-470D-8CB4-6FB0D7220C7D&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-2-128699655-null-null.142%5ev100%5epc_search_result_base1&amp;utm_term=Universal%20Information%20Extraction%20as%20Unified%20Semantic%20Matching&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
-    >https://blog.csdn.net/qq_27590277/article/details/128699655?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522A7AAA045-C8D2-470D-8CB4-6FB0D7220C7D%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=A7AAA045-C8D2-470D-8CB4-6FB0D7220C7D&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-2-128699655-null-null.142^v100^pc_search_result_base1&utm_term=Universal%20Information%20Extraction%20as%20Unified%20Semantic%20Matching&spm=1018.2226.3001.4187</a>
+    >https://blog.csdn.net/qq_27590277/article/details/128699655?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522A7AAA045-C8D2-470D-8CB4-6FB0D7220C7D%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=A7AAA045-C8D2-470D-8CB4-6FB0D7220C7D&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-2-128699655-null-null.142^v100^pc_search_result_base1&utm_term=Universal%20Information%20Extraction%20as%20Unified%20Semantic%20Matching&spm=1018.2226.3001.4187</a><br>
 [2] <a class="link" href="https://adaning.github.io/posts/11838.html"  target="_blank" rel="noopener"
     >https://adaning.github.io/posts/11838.html</a></p>
 
