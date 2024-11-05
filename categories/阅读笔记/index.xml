@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>阅读笔记 on JLING-L</title>
-        <link>https://JLING-L.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
-        <description>Recent content in 阅读笔记 on JLING-L</description>
+        <title>阅读笔记 on JING</title>
+        <link>https://JING.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</link>
+        <description>Recent content in 阅读笔记 on JING</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <copyright>JLING-L</copyright>
-        <lastBuildDate>Mon, 04 Nov 2024 13:31:44 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" /><item>
+        <copyright>JING</copyright>
+        <lastBuildDate>Mon, 04 Nov 2024 13:31:44 +0800</lastBuildDate><atom:link href="https://JING.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</title>
-        <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</link>
+        <link>https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</link>
         <pubDate>Mon, 04 Nov 2024 13:31:44 +0800</pubDate>
         
-        <guid>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</guid>
-        <description>&lt;img src="https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg" alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:70%&#34; /&gt;
+        <guid>https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</guid>
+        <description>&lt;img src="https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg" alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:70%&#34; /&gt;
 &lt;p&gt;论文：https://arxiv.org/abs/2304.08085&lt;br&gt;
 代码：https://github.com/BeyonderXX/InstructUIE&lt;/p&gt;
 &lt;img src=&#34;introduction.jpg&#34; style=&#34;zoom:60%&#34; /&gt;
@@ -80,11 +80,11 @@ USM基于语义匹配机制，通过比对文本span与语义标签的相似性�
         </item>
         <item>
         <title>通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching</title>
-        <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/</link>
+        <link>https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/</link>
         <pubDate>Sun, 03 Nov 2024 09:27:34 +0800</pubDate>
         
-        <guid>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/</guid>
-        <description>&lt;img src="https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/cover.jpg" alt="Featured image of post 通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:43%&#34; /&gt;
+        <guid>https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/</guid>
+        <description>&lt;img src="https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/cover.jpg" alt="Featured image of post 通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:43%&#34; /&gt;
 &lt;p&gt;论文：https://arxiv.org/abs/2301.03282&lt;br&gt;
 Accepted by AAAI2023&lt;/p&gt;
 &lt;p&gt;上一篇我们介绍了UIE，它采用了文本-结构、seq2seq的生成方法。这一方法具有&amp;quot;黑盒&amp;quot;特性，信息片段(如实体、关系、关键词等)和模式(如输出结构)之间的关联是隐式的，这可能导致以下问题：&lt;/p&gt;
@@ -214,22 +214,22 @@ USM(356M)以较小的模型大小优于强zero-shot基线GPT-3(175B)和DEEPSTRUC
         </item>
         <item>
         <title>扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics</title>
-        <link>https://JLING-L.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/</link>
+        <link>https://JING.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/</link>
         <pubDate>Fri, 01 Nov 2024 22:18:33 +0800</pubDate>
         
-        <guid>https://JLING-L.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/</guid>
-        <description>&lt;img src="https://JLING-L.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/cover.jpg" alt="Featured image of post 扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:52%&#34; /&gt;
+        <guid>https://JING.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/</guid>
+        <description>&lt;img src="https://JING.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/cover.jpg" alt="Featured image of post 扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:52%&#34; /&gt;
 &lt;p&gt;论文：https://arxiv.org/abs/1503.03585&lt;/p&gt;
 &lt;h2 id=&#34;unified-structure-generation-for-universal-information-extraction&#34;&gt;Unified Structure Generation for Universal Information Extraction
 &lt;/h2&gt;</description>
         </item>
         <item>
         <title>通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</title>
-        <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/</link>
+        <link>https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/</link>
         <pubDate>Wed, 30 Oct 2024 16:37:14 +0800</pubDate>
         
-        <guid>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/</guid>
-        <description>&lt;img src="https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork.jpg" alt="Featured image of post 通用信息抽取1 | Unified Structure Generation for Universal Information Extraction" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:43%&#34; /&gt;
+        <guid>https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/</guid>
+        <description>&lt;img src="https://JING.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork.jpg" alt="Featured image of post 通用信息抽取1 | Unified Structure Generation for Universal Information Extraction" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:43%&#34; /&gt;
 &lt;p&gt;论文：https://arxiv.org/abs/2203.12277&lt;br&gt;
 代码：https://github.com/universal-ie/UIE&lt;br&gt;
 Accepted to the main conference of ACL2022&lt;/p&gt;
