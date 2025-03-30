@@ -57,7 +57,7 @@
                     
                     
                         
-                        <img src="/img/cat_hu9558166948447768775.png" width="300"
+                        <img src="/img/cat_hu_49161881ff4ed6b1.png" width="300"
                             height="300" class="site-logo" loading="lazy" alt="Avatar">
                     
                 
@@ -282,8 +282,8 @@
     <header class="article-header">
         <div class="article-image">
             <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu4116013061025293458.jpg"
-                        srcset="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu4116013061025293458.jpg 800w, /p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu15102715505043875488.jpg 1600w"
+                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu_3402b3f32c31fede.jpg"
+                        srcset="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu_3402b3f32c31fede.jpg 800w, /p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork_hu_7150c0b30ac662ad.jpg 1600w"
                         width="800" 
                         height="204" 
                         loading="lazy"
@@ -414,14 +414,10 @@ EE任务的目标是识别文本中发生的事件，并提取出事件的参与
 <h3 id="structure-generation-with-uie">Structure Generation with UIE
 </h3><p>简单来说，UIE的输入是SSI+Text的形式，输出是用SEL语法表示的结构。UIE整体可以看作是Encoder-Decoder架构的模型：</p>
 <h4 id="encoder">Encoder
-</h4><p>通过Transformer Encoder对SSI $s$和文本序列$x$进行编码，生成hidden representation:
-</p>
-$$
+</h4>$$
 H = Encoder(s_1, s_2, s_{|s|}, x_1, ..., x_{|x|})
 $$<h4 id="decoder">Decoder
-</h4><p>使用Transformer Decoder以自回归的方式逐步生成目标SEL序列：
-</p>
-$$
+</h4>$$
 y_i, h_i^d = Decoder([H; h_1^d, ..., h_{i-1}^d])
 $$<p>
 当解码器生成特殊的结束符号&lt;eos&gt;时，解码过程完成。</p>
@@ -450,14 +446,10 @@ $$
 {L}_{\text {Text}}=\sum_{x \in \mathcal{D}_{\text {text}}}-\log p\left(x^{\prime \prime} \mid x^{\prime} ; \theta_{e}, \theta_{d}\right)
 $$</li>
 </ol>
-<p>最终目标是将上述任务结合起来：
-</p>
 $$
 {L}={L}_{\text {Pair}} + {L}_{\text {Record}} + {L}_{\text {Text}}
 $$<h3 id="fine-tuning-for-uie">Fine-tuning for UIE
-</h3><p>给定一个标记语料库$D_task={(s, x, y)}$，使用teacher-forcing cross-entropy loss来微调UIE模型：
-</p>
-$$
+</h3>$$
 {L}_{FT}=\sum_{(s, x, y) \in \mathcal{D}_{\text {Task}}}-\log p\left(y \mid x, s; \theta_{e}, \theta_{d}\right)
 $$<p>
 为了缓解暴露偏差，在解码过程中，作者还设计了一种拒绝机制。给定实例$(s, x, y)$，使用SEL对$y$进行编码，随机加入$[NULL]$噪声。具体示例如图所示：<br>
@@ -532,7 +524,7 @@ ps：其他的实验结果具体可以看原文，在这里就不详细说明了
         
         
             <div class="article-image">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.3b2dded8323e2cf89fe59a4eece86721_hu18325295463674673063.jpg" 
+                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.3b2dded8323e2cf89fe59a4eece86721_hu_cff62041eab23a85.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -556,7 +548,7 @@ ps：其他的实验结果具体可以看原文，在这里就不详细说明了
         
         
             <div class="article-image">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/cover.157d0dcf250c8790d3e9941a45434f90_hu3274034175356298639.jpg" 
+                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/cover.157d0dcf250c8790d3e9941a45434f90_hu_cfaea39148123354.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
@@ -569,30 +561,6 @@ ps：其他的实验结果具体可以看原文，在这里就不详细说明了
 
         <div class="article-details">
             <h2 class="article-title">通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/">
-        
-        
-            <div class="article-image">
-                <img src="/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/cover.4d87916c07ee7026b49aa4bff277b108_hu1519725652445777223.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post 扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics"
-                        
-                        data-hash="md5-TYeRbAfucCa0mqS/8nexCA==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics</h2>
         </div>
     </a>
 </article>
@@ -611,7 +579,9 @@ ps：其他的实验结果具体可以看原文，在这里就不详细说明了
     <section class="copyright">
         &copy; 
         
-        2024 JLING-L
+            2024 - 
+        
+        2025 JLING-L
     </section>
     
     <section class="powerby">

@@ -7,7 +7,15 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>JLING-L</copyright>
-        <lastBuildDate>Mon, 04 Nov 2024 13:31:44 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 30 Mar 2025 13:10:43 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>ColPali_blog</title>
+        <link>https://JLING-L.github.io/p/colpali_blog/</link>
+        <pubDate>Sun, 30 Mar 2025 13:10:43 +0800</pubDate>
+        
+        <guid>https://JLING-L.github.io/p/colpali_blog/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</title>
         <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</link>
         <pubDate>Mon, 04 Nov 2024 13:31:44 +0800</pubDate>
@@ -103,8 +111,6 @@ Accepted by AAAI2023&lt;/p&gt;
 &lt;li&gt;Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为$[h_1,h_2,&amp;hellip;,h_{|l|+|t|]$。&lt;/li&gt;
 &lt;li&gt;Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相&amp;quot;看到&amp;quot;(self-attention)，从而捕捉它们之间的交互关系。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;最终，联合标签-文本嵌入可以表示为：
-&lt;/p&gt;
 $$
 H = Encoder(l_1,l_2,...,l_{|l|},t_1,t_2,...,t_{|t|},M)
 $$&lt;h3 id=&#34;token-linking-operations&#34;&gt;Token Linking Operations
@@ -127,8 +133,6 @@ $$&lt;h3 id=&#34;token-linking-operations&#34;&gt;Token Linking Operations
 &lt;img src=&#34;TTL_example2.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;br&gt;
 如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;，USM通过H2H将&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;链接起来，同时也通过T2T链接这两个token。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;USM通过计算每对有效token对$&amp;lt;t_i,t_j&amp;gt;$的链接分数$s_{TTL}(t_i,t_j)$(表示token之间的相似度或相关性，高分数意味着这两个token在上下文中有较强的关联性，适合进行链接)来实现上述的H2T、H2H和T2T链接操作。链接分数的计算公式如下：&lt;br&gt;
-&lt;/p&gt;
 $$
 s_{TTL}(t_i,t_j) = FFNN_{TTL}^l(h_t^i)^TR_{j-i}FFNN_{TTL}^r(h_t^j)
 $$&lt;p&gt;
@@ -145,14 +149,7 @@ s_{LTL}(l_i,t_j) = FFNN_{LTL}^{label}(h_i^l)^TR_{j-i}FFNN_{LTL}^{Text}(h_j^t)
 $$&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h4 id=&#34;token-label-linking-for-pairing-conceptualizing-tll&#34;&gt;Token-Label Linking for Pairing Conceptualizing (TLL)
-&lt;/h4&gt;&lt;p&gt;考虑Association Pair的概念化。在LTL中，已经链接了label到Association Pair中的Object，还需要链接label和Association Pair中的Subject。这样就可以根据多条路径确定一个三元组：&lt;br&gt;
-TTL：(Subject, Object)&lt;br&gt;
-LTL：(Association, Object)&lt;br&gt;
-TLL：(Subject, Association)&lt;br&gt;
-&lt;img src=&#34;TLL_example.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;br&gt;
-链接方式与LTL类似，还是头对头、尾对位的链接，但链接方向不同，链接通过head-to-label(H2L)和tail-to-label(T2L)实现。链接分数的计算公式如下：
-&lt;/p&gt;
-$$
+&lt;/h4&gt;$$
 s_{TTL}(t_i,l_j) = FFNN_{TLL}^{text}(h_i^l)^TR_{j-i}FFNN_{TLL}^{label}(h_j^t)
 $$&lt;h3 id=&#34;schema-text-joint-embedding-1&#34;&gt;Schema-Text Joint Embedding
 &lt;/h3&gt;&lt;p&gt;通过schema-constraint解码，如图所示：&lt;br&gt;
@@ -180,9 +177,7 @@ $$&lt;h3 id=&#34;schema-text-joint-embedding-1&#34;&gt;Schema-Text Joint Embeddi
 间接监督数据集通过多样化的问题表达，提供了比$D_{task}$和$D_{distant}$更多样化的标签语义信息，有助于模型学习更丰富的概念化能力(增强泛化能力)。对于每个(question，context，answer)实例，问题作为label schema，context作为输入文本，answer作为mention。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;learning-function&#34;&gt;Learning function
-&lt;/h3&gt;&lt;p&gt;在USM学习过程中，面临的主要挑战是链接对的稀疏性(链接对仅占所有有效标记对候选项的不到1%)，为了应对这种极端的链接实例稀疏性，USM使用了优化的类别不平衡损失。
-&lt;/p&gt;
-$$
+&lt;/h3&gt;$$
 L = \sum_{m \in \mathcal{M}} log \left(1+\sum_{(i, j) \in m^{+}} e^{-s_{m}(i, j)}\right) +\log \left(1+\sum_{(i, j) \in m^{-}} e^{s_{m}(i, j)}\right)
 $$&lt;p&gt;
 损失函数由两部分组成：&lt;/p&gt;
@@ -211,17 +206,6 @@ USM(356M)以较小的模型大小优于强zero-shot基线GPT-3(175B)和DEEPSTRUC
 [2] &lt;a class=&#34;link&#34; href=&#34;https://adaning.github.io/posts/11838.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://adaning.github.io/posts/11838.html&lt;/a&gt;&lt;/p&gt;
 </description>
-        </item>
-        <item>
-        <title>扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics</title>
-        <link>https://JLING-L.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/</link>
-        <pubDate>Fri, 01 Nov 2024 22:18:33 +0800</pubDate>
-        
-        <guid>https://JLING-L.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/</guid>
-        <description>&lt;img src="https://JLING-L.github.io/p/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B1-deep-unsupervised-learning-using-nonequilibrium-thermodynamics/cover.jpg" alt="Featured image of post 扩散模型1 | Deep Unsupervised Learning using Nonequilibrium Thermodynamics" /&gt;&lt;img src=&#34;authors.jpg&#34; style=&#34;zoom:52%&#34; /&gt;
-&lt;p&gt;论文：https://arxiv.org/abs/1503.03585&lt;/p&gt;
-&lt;h2 id=&#34;unified-structure-generation-for-universal-information-extraction&#34;&gt;Unified Structure Generation for Universal Information Extraction
-&lt;/h2&gt;</description>
         </item>
         <item>
         <title>通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</title>
@@ -285,14 +269,10 @@ EE任务的目标是识别文本中发生的事件，并提取出事件的参与
 &lt;h3 id=&#34;structure-generation-with-uie&#34;&gt;Structure Generation with UIE
 &lt;/h3&gt;&lt;p&gt;简单来说，UIE的输入是SSI+Text的形式，输出是用SEL语法表示的结构。UIE整体可以看作是Encoder-Decoder架构的模型：&lt;/p&gt;
 &lt;h4 id=&#34;encoder&#34;&gt;Encoder
-&lt;/h4&gt;&lt;p&gt;通过Transformer Encoder对SSI $s$和文本序列$x$进行编码，生成hidden representation:
-&lt;/p&gt;
-$$
+&lt;/h4&gt;$$
 H = Encoder(s_1, s_2, s_{|s|}, x_1, ..., x_{|x|})
 $$&lt;h4 id=&#34;decoder&#34;&gt;Decoder
-&lt;/h4&gt;&lt;p&gt;使用Transformer Decoder以自回归的方式逐步生成目标SEL序列：
-&lt;/p&gt;
-$$
+&lt;/h4&gt;$$
 y_i, h_i^d = Decoder([H; h_1^d, ..., h_{i-1}^d])
 $$&lt;p&gt;
 当解码器生成特殊的结束符号&amp;lt;eos&amp;gt;时，解码过程完成。&lt;/p&gt;
@@ -321,14 +301,10 @@ $$
 {L}_{\text {Text}}=\sum_{x \in \mathcal{D}_{\text {text}}}-\log p\left(x^{\prime \prime} \mid x^{\prime} ; \theta_{e}, \theta_{d}\right)
 $$&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;最终目标是将上述任务结合起来：
-&lt;/p&gt;
 $$
 {L}={L}_{\text {Pair}} + {L}_{\text {Record}} + {L}_{\text {Text}}
 $$&lt;h3 id=&#34;fine-tuning-for-uie&#34;&gt;Fine-tuning for UIE
-&lt;/h3&gt;&lt;p&gt;给定一个标记语料库$D_task={(s, x, y)}$，使用teacher-forcing cross-entropy loss来微调UIE模型：
-&lt;/p&gt;
-$$
+&lt;/h3&gt;$$
 {L}_{FT}=\sum_{(s, x, y) \in \mathcal{D}_{\text {Task}}}-\log p\left(y \mid x, s; \theta_{e}, \theta_{d}\right)
 $$&lt;p&gt;
 为了缓解暴露偏差，在解码过程中，作者还设计了一种拒绝机制。给定实例$(s, x, y)$，使用SEL对$y$进行编码，随机加入$[NULL]$噪声。具体示例如图所示：&lt;br&gt;
