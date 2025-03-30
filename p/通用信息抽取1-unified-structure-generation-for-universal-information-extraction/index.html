@@ -439,7 +439,7 @@ $$
 $$</li>
 <li>Structure Generation Pre-training with $D_record$：在给定之前生成的token的情况下，预测当前token $y_i$的负对数似然。
 $$
-{L}_{\text {Record}}=\sum_{y \in \mathcal{D}_{\text {record}}}-\log p\left(y_i \mid y_{&lt i}; \theta_{d}\right)
+{L}_{\text {Record}}=\sum_{y \in \mathcal{D}_{\text {record}}}-\log p\left(y_i \mid y_{< i}; \theta_{d}\right)
 $$</li>
 <li>Retrofitting Semantic Representation using $D_text$：给定被Mask的源文本，让模型还原被Mask的部分。
 $$

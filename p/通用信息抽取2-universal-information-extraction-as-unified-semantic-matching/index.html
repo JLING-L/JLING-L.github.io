@@ -375,7 +375,7 @@ Accepted by AAAI2023</p>
 <ol>
 <li>提取模式词序列化：USM将提取模式(schema)表示为一个词序列。例如，如果提取模式是&quot;person&quot;和&quot;location&quot;这样的标签，USM会将这些标签转换为词序列形式，即{$l_1,l_2,&hellip;,l_{|l|}$}。(类似文本token)</li>
 <li>拼接schema和文本：USM将词序列化后的schema sequence与文本token{$t_1,t_2,&hellip;,t_{|t|}$}进行拼接，一起作为模型的输入。</li>
-<li>Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为$[h_1,h_2,&hellip;,h_{|l|+|t|]$。</li>
+<li>Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为[$h_1,h_2,&hellip;,h_{|l|+|t|}$]。</li>
 <li>Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相&quot;看到&quot;(self-attention)，从而捕捉它们之间的交互关系。</li>
 </ol>
 $$
@@ -393,10 +393,10 @@ $$<h3 id="token-linking-operations">Token Linking Operations
 而部分IE任务所需的结构可能包括不止一个信息单元，例如{&ldquo;Monet&rdquo;, birth place, &ldquo;Paris&rdquo;}就是一个三元组的形式，此时，我们则需要找到Subject-Object对。<br>
 作者设计了TTL操作，从两个方面对输入文本中所有有效的子结构进行构造：</p>
 <ol>
-<li>Utterance(文本)：指输入文本中的连续token序列，例如实体(如&quot;Monet&quot;)或事件触发词(如&quot;born in&quot;)。
+<li>Utterance(文本)：指输入文本中的连续token序列，例如实体(如&quot;Monet&quot;)或事件触发词(如&quot;born in&quot;)。<br>
 <img src="TTL_example1.jpg" style="zoom:40%" /><br>
 如图所示，其实就是将头和尾链接(H2T)。例如，为了提取span&quot;Monet&quot;和&quot;born in&quot;作为有效的子结构，USM利用H2T将&quot;Monet&quot;链接到自身来提取&quot;Monet&quot;，并将&quot;born&quot;链接到&quot;in&quot;以提取&quot;born in&quot;。</li>
-<li>Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如&quot;Monet&quot;和&quot;Paris&quot;)或事件触发词-参数对(如&quot;born in&quot;和&quot;Paris&quot;)。
+<li>Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如&quot;Monet&quot;和&quot;Paris&quot;)或事件触发词-参数对(如&quot;born in&quot;和&quot;Paris&quot;)。<br>
 <img src="TTL_example2.jpg" style="zoom:40%" /><br>
 如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对&quot;Monet&quot;和&quot;Paris&quot;，USM通过H2H将&quot;Monet&quot;和&quot;Paris&quot;链接起来，同时也通过T2T链接这两个token。</li>
 </ol>

@@ -108,7 +108,7 @@ Accepted by AAAI2023&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;提取模式词序列化：USM将提取模式(schema)表示为一个词序列。例如，如果提取模式是&amp;quot;person&amp;quot;和&amp;quot;location&amp;quot;这样的标签，USM会将这些标签转换为词序列形式，即{$l_1,l_2,&amp;hellip;,l_{|l|}$}。(类似文本token)&lt;/li&gt;
 &lt;li&gt;拼接schema和文本：USM将词序列化后的schema sequence与文本token{$t_1,t_2,&amp;hellip;,t_{|t|}$}进行拼接，一起作为模型的输入。&lt;/li&gt;
-&lt;li&gt;Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为$[h_1,h_2,&amp;hellip;,h_{|l|+|t|]$。&lt;/li&gt;
+&lt;li&gt;Transformer编码器：拼接后的词序列和文本通过一个Transformer编码器进行处理，计算出联合的上下文嵌入H，表示为[$h_1,h_2,&amp;hellip;,h_{|l|+|t|}$]。&lt;/li&gt;
 &lt;li&gt;Mask矩阵：M是一个Mask矩阵，用来决定哪些标签或文本token可以互相&amp;quot;看到&amp;quot;(self-attention)，从而捕捉它们之间的交互关系。&lt;/li&gt;
 &lt;/ol&gt;
 $$
@@ -126,10 +126,10 @@ $$&lt;h3 id=&#34;token-linking-operations&#34;&gt;Token Linking Operations
 而部分IE任务所需的结构可能包括不止一个信息单元，例如{&amp;ldquo;Monet&amp;rdquo;, birth place, &amp;ldquo;Paris&amp;rdquo;}就是一个三元组的形式，此时，我们则需要找到Subject-Object对。&lt;br&gt;
 作者设计了TTL操作，从两个方面对输入文本中所有有效的子结构进行构造：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;Utterance(文本)：指输入文本中的连续token序列，例如实体(如&amp;quot;Monet&amp;quot;)或事件触发词(如&amp;quot;born in&amp;quot;)。
+&lt;li&gt;Utterance(文本)：指输入文本中的连续token序列，例如实体(如&amp;quot;Monet&amp;quot;)或事件触发词(如&amp;quot;born in&amp;quot;)。&lt;br&gt;
 &lt;img src=&#34;TTL_example1.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;br&gt;
 如图所示，其实就是将头和尾链接(H2T)。例如，为了提取span&amp;quot;Monet&amp;quot;和&amp;quot;born in&amp;quot;作为有效的子结构，USM利用H2T将&amp;quot;Monet&amp;quot;链接到自身来提取&amp;quot;Monet&amp;quot;，并将&amp;quot;born&amp;quot;链接到&amp;quot;in&amp;quot;以提取&amp;quot;born in&amp;quot;。&lt;/li&gt;
-&lt;li&gt;Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;)或事件触发词-参数对(如&amp;quot;born in&amp;quot;和&amp;quot;Paris&amp;quot;)。
+&lt;li&gt;Association Pair(文本对)：从文本中提取的基本关联对单元，例如关系的Subject-Object对(如&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;)或事件触发词-参数对(如&amp;quot;born in&amp;quot;和&amp;quot;Paris&amp;quot;)。&lt;br&gt;
 &lt;img src=&#34;TTL_example2.jpg&#34; style=&#34;zoom:40%&#34; /&gt;&lt;br&gt;
 如图所示，链接关联对是将头与头链接(H2H)、尾与尾链接(T2T)。例如，要提取Subject-Object对&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;，USM通过H2H将&amp;quot;Monet&amp;quot;和&amp;quot;Paris&amp;quot;链接起来，同时也通过T2T链接这两个token。&lt;/li&gt;
 &lt;/ol&gt;
@@ -294,7 +294,7 @@ $$
 $$&lt;/li&gt;
 &lt;li&gt;Structure Generation Pre-training with $D_record$：在给定之前生成的token的情况下，预测当前token $y_i$的负对数似然。
 $$
-{L}_{\text {Record}}=\sum_{y \in \mathcal{D}_{\text {record}}}-\log p\left(y_i \mid y_{&amp;lt i}; \theta_{d}\right)
+{L}_{\text {Record}}=\sum_{y \in \mathcal{D}_{\text {record}}}-\log p\left(y_i \mid y_{&lt; i}; \theta_{d}\right)
 $$&lt;/li&gt;
 &lt;li&gt;Retrofitting Semantic Representation using $D_text$：给定被Mask的源文本，让模型还原被Mask的部分。
 $$
