@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Test on JLING-L</title>
+        <title>JLING-L</title>
         <link>https://JLING-L.github.io/categories/test/</link>
-        <description>Recent content in Test on JLING-L</description>
+        <description>Recent content on JLING-L</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>JLING-L</copyright><atom:link href="https://JLING-L.github.io/categories/test/index.xml" rel="self" type="application/rss+xml" />

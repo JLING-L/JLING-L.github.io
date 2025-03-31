@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n">
+<title>深度学习基础1 | 感知机、激活函数、正则化、BN和LN、优化器</title>
+
+<link rel='canonical' href='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="深度学习基础1 | 感知机、激活函数、正则化、BN和LN、优化器">
+<meta property='og:description' content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n">
+<meta property='og:url' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/'>
+<meta property='og:site_name' content='JLING-L'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='deep learning' /><meta property='article:published_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='article:modified_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network.png' />
+<meta name="twitter:title" content="深度学习基础1 | 感知机、激活函数、正则化、BN和LN、优化器">
+<meta name="twitter:description" content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network.png' />
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/cat_hu_49161881ff4ed6b1.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">⭐</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">JLING-L</a></h1>
+            <h2 class="site-description">Welcome to JLING-L&#39;s blog.</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/JLING-L'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#神经元">神经元</a></li>
+    <li><a href="#单层感知机-单层神经网络">单层感知机 (单层神经网络)</a></li>
+    <li><a href="#多层感知机-多层神经网络">多层感知机 (多层神经网络)</a></li>
+    <li><a href="#激活函数">激活函数</a></li>
+    <li><a href="#梯度消失和梯度爆炸">梯度消失和梯度爆炸</a></li>
+    <li><a href="#正则化技术防止过拟合">正则化技术(防止过拟合)</a></li>
+    <li><a href="#batch-normalization和layer-normalization">Batch Normalization和Layer Normalization</a></li>
+    <li><a href="#优化器">优化器</a></li>
+    <li><a href="#reference">Reference</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/">
+                <img src="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network_hu_8dd330bc2af1f5f1.png"
+                        srcset="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network_hu_8dd330bc2af1f5f1.png 800w, /p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network_hu_90554e35923cbce1.png 1600w"
+                        width="800" 
+                        height="451" 
+                        loading="lazy"
+                        alt="Featured image of post 深度学习基础1 | 感知机、激活函数、正则化、BN和LN、优化器" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >
+                学习笔记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/">深度学习基础1 | 感知机、激活函数、正则化、BN和LN、优化器</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-03-30</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 14 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="神经元">神经元
+</h2>$$
+z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3)
+$$$$
+\text{sgn}(x) =
+\begin{cases} 
+1, & x \geq 0 \\
+0, & x < 0
+\end{cases}
+$$<p>
+其中的x表示加权输入的总和，当输入总和$\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。</p>
+<img src="neurons_1.png" style="zoom:53%" />
+<p>将sum、sgn绘制在一起表示神经元的内部计算。单个神经元可以引出多个相同值的有向箭头。</p>
+<p><strong>神经元模型的目标是什么？</strong></p>
+<p>神经元的目标是学习一个最优的计算规则，让输入数据经过它后，能尽可能准确地预测输出。<br>
+可以将神经元视作一个决策器，比如决定今天是否要带伞：</p>
+<ol>
+<li>输入：天气预报的温度、湿度、云量、风速等；</li>
+<li>权重：不同特征对决策的影响程度；</li>
+<li>计算(加权求和+激活)：综合所有信息后，决定是否带伞；</li>
+<li>输出：最终决定(如 1=带伞，0=不带伞)。</li>
+</ol>
+<p><strong>局限性</strong></p>
+<p>在前面的内容中可以发现，这一方法存在一些局限性：</p>
+<ol>
+<li>只支持二值输出：由于使用符号函数进行决策，神经元的输出为0或1；</li>
+<li>无法处理非线性问题：sgn函数是线性的，它只会根据加权和是否大于0来判断；</li>
+<li>不能自我学习：所有权重和阈值均需要人工设计。</li>
+</ol>
+<h2 id="单层感知机-单层神经网络">单层感知机 (单层神经网络)
+</h2>$$
+z_1 = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3)
+$$$$
+z_2 = g(a_1 * W_4 + a_2 * W_5 + a_3 * W_6)
+$$$$
+z_1 = g(a_1 * W_{1,1} + a_2 * W_{1,2} + a_3 * W_{1,3})
+$$$$
+z_2 = g(a_1 * W_{2,1} + a_2 * W_{2,2} + a_3 * W_{2,3})
+$$$$
+g(W*a) = z
+$$<p>
+其中，$a=[a_1,a_2,a_3]^T$；$z=[z_1,z_2]^T$；W为2行3列的矩阵。</p>
+<p><strong>感知机是如何训练的？</strong></p>
+$$
+f(x) = sign(w^T·x+b)
+$$$$
+sign(x) =
+\begin{cases} 
++1, & x \geq 0 \\
+-1, & x < 0
+\end{cases}
+$$<p><strong>感知机的几何解释</strong>：线性方程$w·x+b=0$对应于特征空间中的一个超平面$S$，其中$w$是超平面的法向量，$b$是超超平面的截距，这个超平面将特征空间划分为正负两部分：</p>
+<ol>
+<li>当$w^T·x_i+b\geq0$时，$y_i=+1$；</li>
+<li>当$w^T·x_i+b&lt;0$时，$y_i=-1$；</li>
+</ol>
+<img src="perceptron_2.png" style="zoom:33%" />
+$$
+y_i(w^T·x_i+b)<0
+$$$$
+L(w, b) = - \sum_{i \in \mathcal{M}} y_i (w^T· x_i + b)
+$$$$
+\nabla_w L = - \sum_{i \in \mathcal{M}} y_i x_i
+$$$$
+\nabla_b L = - \sum_{i \in \mathcal{M}} y_i
+$$$$
+w = w - \eta \nabla_w L
+$$$$
+b = b - \eta \nabla_b L
+$$$$
+w = w + \eta y_ix_i
+$$$$
+b = b + \eta y_i
+$$<p>
+其中，$\eta (0&lt;\eta\leq 1)$为步长(学习率)。</p>
+<p><strong>什么是梯度？</strong></p>
+$$
+\nabla_\theta L = (\frac{\partial L}{\partial \theta_1}, \frac{\partial L}{\partial \theta_2}, ..., \frac{\partial L}{\partial \theta_n})
+$$$$
+\theta \leftarrow \theta-\eta\nabla_\theta L
+$$<p><strong>单层感知机代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Perceptron</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">input_dim</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">activation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_iter</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">errors</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">xi</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">pred</span> <span class="o">!=</span> <span class="n">yi</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">yi</span> <span class="o">*</span> <span class="n">xi</span>
+</span></span><span class="line"><span class="cl">                    <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">yi</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">errors</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">errors</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 训练</span>
+</span></span><span class="line"><span class="cl"><span class="n">perceptron</span> <span class="o">=</span> <span class="n">Perceptron</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">perceptron</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 测试</span>
+</span></span><span class="line"><span class="cl"><span class="n">predictions</span> <span class="o">=</span> <span class="n">perceptron</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;预测结果：&#34;</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>局限性</strong></p>
+<p>单层感知机只能处理可以通过一条直线(或超平面)分开的数据。非线性问题(如异或问题)就无法解决。</p>
+<h2 id="多层感知机-多层神经网络">多层感知机 (多层神经网络)
+</h2><p>单层神经网络无法解决非线性问题(如异或问题)，但如果增加一个计算层，通过多次非线性映射，输入数据就可以被映射到更高维的特征空间，从而解决非线性可分问题。这个增加的计算层被称为隐藏层。增加的隐藏层由图中黄色的块表示：</p>
+<img src="perceptron_3.png" style="zoom:43%" />
+$$
+h_1 = f(w_{1,1}*x_1 + w_{2,1}*x_2 + w_{3,1}*x_3 + b_1)
+$$$$
+h_2 = f(w_{1,2}*x_1 + w_{2,2}*x_2 + w_{3,3}*x_3 + b_2)
+$$$$
+y = v_1*h_1 + v_2*h_2 + b
+$$<p>
+如果$f(·)$是线性的，增加了隐藏层的多层感知机本质上还是一个线性模型。而多层感知机的目的是让模型可以处理非线性问题，因此，这里的$f(·)$需要使用非线性函数。</p>
+<p><strong>为什么使用非线性激活函数就可以增强模型能力？</strong></p>
+<p>任意非线性函数都可以通过多个分段线性函数的组合来进行近似和表示。而在多层感知机中，激活函数(如ReLU、sigmoid等)帮助神经网络实现了这种分段线性变换，从而使得它可以拟合任意的非线性关系。</p>
+<p>然而，多层神经网络需要处理多个层次的权重和偏置，在每一层之间进行矩阵乘法和激活函数的非线性变换。随着网络深度的增加，计算复杂度呈指数级增长。</p>
+<p>1986年，Rumelhar和Hinton等人提出了反向传播(Backpropagation，BP)算法，解决了两层神经网络所需要的复杂计算量问题。反向传播的核心思想是通过计算损失函数相对于网络各个参数的梯度，来更新神经网络中的权重和偏置，从而使得网络在训练过程中最小化损失。</p>
+<p><strong>链式法则</strong></p>
+<p>对于$f(g(x))$，导数为：$\frac{df}{dx} = \frac{df}{dg}·\frac{dg}{dx}$</p>
+<p><strong>前向传播</strong></p>
+$$
+h = \sigma(z_1)
+$$$$
+z_1 = w_1x+b_1
+$$$$
+y = z_2
+$$$$
+z_2 = w_2h+b_2
+$$$$
+L = \frac{1}{2}(y-t)^2
+$$<p><strong>反向传播</strong></p>
+$$
+\frac{\alpha L}{\alpha y} = y-t
+$$$$
+\frac{\alpha L}{\alpha w_2} = \frac{\alpha L}{\alpha y}·\frac{\alpha y}{\alpha w_2} = (y-t)·h^T
+$$$$
+\frac{\alpha L}{\alpha b_2} = \frac{\alpha L}{\alpha y}·\frac{\alpha y}{\alpha b_2} = y-t
+$$$$
+\frac{\alpha L}{\alpha h} = \frac{\alpha L}{\alpha y}·\frac{\alpha y}{\alpha h} = (y-t)·W_2^T
+$$$$
+\frac{\alpha L}{\alpha z_1} = \frac{\alpha L}{\alpha h}·\frac{\alpha h}{\alpha z_1} = \frac{\alpha L}{\alpha h}·\sigma'(z_1)
+$$$$
+\frac{\alpha L}{\alpha w_1} = \frac{\alpha L}{\alpha z_1}·\frac{\alpha z_1}{\alpha w_1} = \frac{\alpha L}{\alpha z_1}·x^T
+$$$$
+\frac{\alpha L}{\alpha b_1} = \frac{\alpha L}{\alpha z_1}·\frac{\alpha z_1}{\alpha b_1} = \frac{\alpha L}{\alpha z_1}
+$$$$
+\frac{\alpha L}{\alpha w_l} = \frac{\alpha L}{\alpha z_l}·\frac{\alpha z_l}{\alpha w_l}
+$$$$
+\frac{\alpha L}{\alpha b_l} = \frac{\alpha L}{\alpha z_l}·\frac{\alpha z_l}{\alpha b_l}
+$$<p>
+其中，$w_l$、$b_l$是第$l$层的参数；$z_l$为第$l$层的输入(未激活)；$\frac{\alpha L}{\alpha z_l}$是对第$l$层输入的梯度。</p>
+<p><strong>多层感知机代码</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MLP</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">input_size</span> <span class="o">=</span> <span class="n">input_size</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">output_size</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_size</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">sigmoid_derivative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">relu_derivative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_input</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">final_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">b2</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">final_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_input</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_output</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">backward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">error</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_output</span>
+</span></span><span class="line"><span class="cl">        <span class="n">d_output</span> <span class="o">=</span> <span class="n">error</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid_derivative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">final_output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">d_hidden</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">d_output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">relu_derivative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_output</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">d_output</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d_output</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">d_hidden</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d_hidden</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">error</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">, Loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 训练</span>
+</span></span><span class="line"><span class="cl"><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl"><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">mlp</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 测试</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Final Predictions:&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">mlp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="激活函数">激活函数
+</h2><p>在前面的内容中，我们多次提到了激活函数这个概念。激活函数在隐藏层和输出层增加了非线性操作，允许网络复制复杂的非线性行为，从而帮助网络学习数据中的复杂模式、提升表达能力。<br>
+由于绝大多数神经网络都是借助某种形式的梯度下降进行优化，因此激活函数需要是可微分(或者至少是几乎完全可微分的)。<br>
+下面简单介绍一些常用的激活函数。</p>
+$$
+\sigma(x) = \frac{1}{1+e^{-x}}
+$$$$
+\sigma'(x) = \frac{e^{-x}}{(1+e^{-x})^2} = \sigma(x)[1-\sigma(x)]
+$$<img src="sigmoid.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>由图可以看出，Sigmoid函数的值域为[0,1]，输出范围有限，优化稳定，可以用作输出层，例如用于表示二分类的类别或者用于表示置信度。</li>
+<li>该函数是连续可导的，可以提供非常平滑的梯度值，防止模型训练过程中出现突变的梯度(即避免跳跃的输出值)。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>导数的最大值只有0.25，网络越深，多个0.25相乘，梯度逐渐趋近于0，反向传播时其权重几乎得不到更新，从而使得模型变得难以训练，这就是<strong>梯度消失</strong>问题。</li>
+<li>其输出<strong>不是以0为中心而是全大于0的(这会降低权重更新的效率)</strong>，下一层的神经元会得到上一层输出的全正信号作为输入，因此Sigmoid激活函数一般放在最后的输出层中使用。</li>
+<li><strong>指数运算</strong>耗时。</li>
+</ol>
+$$
+f(x) = \frac{e^{x_i}}{\sum_{i=0}^{n}e^{x_i}}
+$$<img src="softmax.jpg" style="zoom:63%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>Softmax将输出转化为概率，所有输出的值都在[0, 1]之间，并且所有类别的概率之和为1，适合多分类任务。</li>
+<li>经过使用指数形式的Softmax函数能够将差距大的数值距离拉的更大。这有助于神经网络模型在进行多分类时区分不同类别的相对优先级。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>需要对所有类别的指数求和，这在类别数很大的时候会导致较高的计算开销。</li>
+<li>在输出层，Softmax函数的梯度非常依赖于模型的输出。当某个类别的输出远大于其他类别时，梯度会变得非常小，导致梯度消失问题。</li>
+<li>容易受到异常值的影响，尤其是在某些类别的得分非常大的时候。一个非常大的输入值可能会导致Softmax输出的概率几乎集中在一个类别上，从而影响其他类别的学习。</li>
+</ol>
+<p><strong>Sigmoid与Softmax的区别</strong></p>
+<ol>
+<li>
+<p>Sigmoid适用于二分类问题 或多标签分类问题，输出为单一的概率值(通常为每个类别的独立概率)，而不是多个类别的相对概率分布。</p>
+</li>
+<li>
+<p>Softmax适用于多分类问题，它将输出转换为概率分布，并且确保所有类别的概率之和为 1。</p>
+</li>
+</ol>
+$$
+tanh(x) = \frac{e^x-e^{-x}}{e^x+e^{-x}}
+$$$$
+tanh'(x) = \frac{4}{(e^x+e^{-x})^2} = 1-[tanh(x)]^2
+$$<img src="tanh.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>值域为[-1, 1]，对称中心在原点，解决了Sigmoid激活函数输出不以0为中心的问题。</li>
+<li>可以用于隐藏层。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>在两边与Sigmoid一样有梯度趋近于0的问题。</li>
+<li>存在梯度消失问题。</li>
+<li>同样需要进行指数计算。</li>
+</ol>
+$$
+f(x) =
+\begin{cases} 
+x, & x \geq 0 \\
+0, & x < 0
+\end{cases}
+$$$$
+f'(x) =
+\begin{cases} 
+1, & x \geq 0 \\
+0, & x < 0
+\end{cases}
+$$<img src="relu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>正输入时是线性的，收敛速度快(梯度恒为1)，计算速度快。且当输入为正时，由于导数是1，能够完整传递梯度，不存在梯度饱和、梯度消失的问题。</li>
+<li>无论是函数还是其导数都不包含复杂的数学运算，计算复杂度低，只需要一个阈值就可以得到激活值，收敛速度比sigmoid和tanh更快。</li>
+<li>ReLU会使一部分神经元的输出为0，这样就造成了神经网络的稀疏性，并减少了参数的相互依存关系，缓解了过拟合问题的发生。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>输入为负时，输出为0，梯度也为0，相当于神经元直接死亡(Dead Neuron)，而且不会复活，这可能导致特征的学习不充分。</li>
+<li>与Sigmoid一样，其输出不是以0为中心的。</li>
+</ol>
+$$
+f(x) =
+\begin{cases} 
+x, & x \geq 0 \\
+\lambda x, & x < 0
+\end{cases}, \lambda \in (0, 1)
+$$$$
+f'(x) =
+\begin{cases} 
+1, & x \geq 0 \\
+\lambda, & x < 0
+\end{cases}, \lambda \in (0, 1)
+$$<img src="leaky_relu.png" style="zoom:43%" />
+<p><strong>优点</strong><br>
+通过在负半轴添加一个小的正斜率，使得负轴的信息不会全部丢失，以此解决神经元死亡的问题。</p>
+<p><strong>缺点</strong></p>
+<ol>
+<li>超参数$\lambda$需要人为设定，但不同任务可能需要不同的最佳$\lambda$，增加了超参数调优的复杂度。</li>
+<li>当输入值较大时，Leaky ReLU仍可能导致梯度爆炸，需要配合Batch Normalization或其他正则化方法。</li>
+<li>在实际操作中，尚未完全证明Leaky ReLU总是比ReLU更好。</li>
+</ol>
+$$
+f(x) =
+\begin{cases} 
+x, & x \geq 0 \\
+\alpha x, & x < 0
+\end{cases}
+$$$$
+f'(x) =
+\begin{cases} 
+1, & x \geq 0 \\
+\alpha, & x < 0
+\end{cases}
+$$<p>参数α通常为0到1之间的数字，并且通常相对较小:</p>
+<ol>
+<li>如果$𝛼 = 0$，则$f(x)$变为ReLU。</li>
+<li>如果$𝛼 &gt; 0$，则$f(x)$变为Leaky ReLU。</li>
+<li>如果$𝛼$是可学习的参数，则$f(x)$为PReLU。</li>
+</ol>
+<img src="prelu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>与Leaky ReLU类似，PReLU在负值域也有一个相对较小的斜率，可以避免Dead ReLU问题。</li>
+<li>公式与Leaky ReLu相似，但并不完全一样。$𝛼$可以是常数，或自适应调整的参数。也就是说，如果让$𝛼$自适应，那么PReLu会在反向传播时更新参数$𝛼$。因此在不同数据集上，PReLU通常比Leaky ReLU更稳定。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>PReLU让每个神经元都学习一个额外的参数$𝛼$，这会增加模型的自由度，导致模型在小数据集上可能过拟合。</li>
+<li>在某些简单任务中，ReLU已经足够有效，而PReLU的额外参数反而可能带来不必要的复杂度。</li>
+</ol>
+$$
+f(x) =
+\begin{cases} 
+x, & x \geq 0 \\
+\alpha x, & x < 0
+\end{cases}
+$$$$
+f'(x) =
+\begin{cases} 
+1, & x \geq 0 \\
+\alpha, & x < 0
+\end{cases}
+$$<img src="rrelu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>与Leaky ReLU类似，RReLU在负半轴保持非零梯度，避免ReLU的神经元死亡问题。</li>
+<li>训练时随机选取$\alpha$，可以一定程度上减少过拟合，提高模型的泛化能力。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>参数$𝛼$取值随机，训练过程中模型参数的更新方向可能会有所波动，在某些任务上可能会影响收敛速度。</li>
+<li>在测试时使用固定的$𝛼$(取均值)，而训练时是随机的，可能导致模型表现略有偏差。</li>
+</ol>
+$$
+f(x) =
+\begin{cases} 
+x, & x \geq 0 \\
+\alpha (e^x-1), & x < 0
+\end{cases}
+$$$$
+f'(x) =
+\begin{cases} 
+1, & x \geq 0 \\
+\alpha e^x, & x < 0
+\end{cases}
+$$<img src="elu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>ELU在负值时是一个指数函数，具有软饱和特性，对噪声更鲁棒，抗干扰能力强；在较小的输入下会饱和至负值，从而减少前向传播的变异和信息。</li>
+<li>右侧线性部分使ELU能够缓解梯度消失。</li>
+<li>ELU的输出均值接近于0，收敛速度快。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>在输入为负时需要进行指数计算，计算稍复杂。</li>
+<li>$\alpha$参数需要额外调整。</li>
+</ol>
+$$
+f(x) =
+\lambda\begin{cases} 
+x, & x > 0 \\
+\alpha (e^x-1), & x \leq 0
+\end{cases}
+$$$$
+f'(x) =
+\begin{cases} 
+\lambda, & x > 0 \\
+\lambda \alpha e^x, & x \leq 0
+\end{cases}
+$$<img src="selu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>SELU具有自归一化的特性，这使得网络的每一层的输出会在训练过程中保持均值为0，方差为1，从而减轻了梯度消失和梯度爆炸问题。让网络自动保持输入分布的一致性，避免额外的Batch Normalization或Layer Normalization操作保持输出层的稳定。</li>
+<li>内部归一化比外部归一化更快，这使得网络收敛得更快。且每一层的激活函数输出不再依赖于外部约束，减少了对优化器的依赖。</li>
+<li>负值范围通过指数函数保持非零梯度，防止了梯度消失。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>SELU本身已经具备了自归一化特性，它不适合与Batch Normalization结合使用。如果同时使用BN，可能会破坏其自归一化能力。</li>
+<li>SELU的指数部分在负值区域导致输出非常小，可能会导致过度的稀疏性。类似神经元长时间“死亡”。</li>
+</ol>
+$$
+f(x) =
+\lambda\begin{cases} 
+x, & x > 0 \\
+\alpha (e^\frac{x}{\alpha}-1), & x \leq 0
+\end{cases}
+$$$$
+f'(x) =
+\begin{cases} 
+1, & x > 0 \\
+e^\frac{x}{\alpha}, & x \leq 0
+\end{cases}
+$$<img src="celu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>CELU在负区间使用了平滑的指数函数，梯度更连续、平滑。</li>
+<li>对负值区间的指数部分进行平滑处理，避免了激活值快速增大的问题，不容易引起梯度爆炸。</li>
+<li>负值范围输出非零梯度，防止了梯度消失。</li>
+<li>这种平滑的激活函数使得训练更稳定，有助于深度神经网络的收敛。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>在面对复杂的非线性问题时。过度平滑可能会限制网络学习到更复杂的特征表示，从而影响网络的表达能力。</li>
+<li>与ELU一样具有自归一化特性，与BN不完全兼容。</li>
+<li>CELU的表现依赖于超参数$\alpha$，该参数控制了负区间的输出。</li>
+</ol>
+$$
+GELU(x) = 0.5x(1+tanh(\sqrt{\frac{2}{\pi}}(x+0.044715x^3)))
+$$<img src="gelu.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>当方差为无穷大，均值为0的时候，GeLU就等价于ReLU了。GELU可以当作为RELU的一种平滑策略。GELU是非线性输出，具有一定的连续性。</li>
+<li>负值范围输出非零梯度，防止了梯度消失。</li>
+<li>GELU利用高斯误差函数(误差函数与标准正态分布密切相关)，对输入进行概率化变换，这种特性有助于神经网络学习更加复杂和非线性的模式。</li>
+</ol>
+<p><strong>缺点</strong><br>
+GELU的优势主要体现在深度神经网络中，对于较浅的网络，ReLU等激活函数可能已经足够好。使用GELU可能无法提供显著的性能提升，反而由于计算开销的增加，可能会降低网络的训练和推理效率。</p>
+$$
+f(x) = x·\sigma(\beta x)
+$$$$
+f'(x) = xf(\beta x)(1-f(\beta x)) + f(\beta x)
+$$<img src="swish.png" style="zoom:43%" />
+<p><strong>优点</strong></p>
+<ol>
+<li>和ReLU一样，没有上边界，因此不会出现梯度饱和的现象(避免过拟合)。</li>
+<li>有下边界，可以产生更强的正则化效果(x左半轴慢慢趋近0)。</li>
+<li>连续可导，且在整个输入空间中具有平滑的过渡，使Swish能够更好地保持梯度信息，并且在训练时能更好地传播梯度，帮助深度神经网络更有效地学习复杂的特征。</li>
+<li>自门控特性，即函数的输出由输入的本身和经过Sigmoid变换后的输入共同决定。这使得Swish在网络的每一层都能根据输入的特征来动态地调整激活函数的“门控”程度，从而更适应输入的不同情况。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>Swish的优势主要体现在深度神经网络中，特别是在处理更复杂的特征时。在一些浅层网络上，Swish可能不会比其他激活函数(如 ReLU或Sigmoid)带来显著的性能提升。</li>
+<li>由于其涉及到Sigmoid函数的计算，Swish的计算效率不如ReLU，在推理时的延迟可能较高。</li>
+</ol>
+$$
+SwiGLU(x) = Swish(x)·\sigma (Wx+b)
+$$<p>
+其中，$Swish(x)=x·\sigma (x)$，即Swish激活函数；$\sigma(Wx+b)$是Sigmoid门控函数，控制激活值的开关。</p>
+<p><strong>优点</strong></p>
+<ol>
+<li>结合了Swish和GLU的特性，具有非线性表示能力 和门控机制。</li>
+<li>在深度神经网络中，能够加速训练收敛，并提高梯度流动和信息传播效率。</li>
+<li>通过门控机制避免了梯度爆炸和梯度消失问题，增强了训练稳定性。</li>
+<li>具有平滑的激活函数，能学习更加复杂的模式。</li>
+</ol>
+<p><strong>缺点</strong></p>
+<ol>
+<li>计算开销相对较大，计算复杂性较高。</li>
+<li>不适合浅层网络。</li>
+</ol>
+<h2 id="梯度消失和梯度爆炸">梯度消失和梯度爆炸
+</h2><p>在前面激活函数的介绍中我们多次提到了梯度消失和梯度爆炸的概念，下面再对其概念和解决方法做一下总结。</p>
+<p><strong>梯度消失</strong></p>
+<p>当反向传播层数逐渐增多，由于每一层都对前一层梯度乘以了一个小数，因此随着反向传播，梯度逐层减小，导致靠近输入层的权重更新极慢甚至停止更新，网络难以学习到有效的特征。</p>
+<p>解决方案：</p>
+<ol>
+<li>选择合适的激活函数，如ReLU(大于0时导数为1)、Leaky ReLU(在ReLU能力上避免了神经元死亡问题)、ELU(保持ReLu有时的同时解决Dead ReLU问题)等。</li>
+<li>采用ResNet残差连接，通过“跳跃连接”直接把输入传递给后续层，使得梯度可以绕过某些层，解决梯度消失问题，使得网络可以训练非常深。</li>
+<li>适当的权重初始化：Xavier初始化/He初始化，防止梯度在传播过程中过大或过小。</li>
+<li>使用Batch Normalization/Layer Normalization。</li>
+</ol>
+<p><strong>梯度爆炸</strong></p>
+<p>随着误差反向传播，梯度值逐层增大，导致靠近输入层的权重更新过大，从而使模型训练变得不稳定，甚至梯度数值溢出(NaN)。其原因是<strong>初始权重过大</strong>，导致梯度不断放大</p>
+<p>解决方案：</p>
+<ol>
+<li>梯度裁剪，即设定一个剪切阈值，当梯度过大时，将其限制在一定范围。</li>
+<li>采用L2正则化约束权重大小，防止梯度过大。</li>
+<li>适当的权重初始化：Xavier初始化/He初始化，防止梯度在传播过程中过大或过小。</li>
+<li>使用Batch Normalization/Layer Normalization。</li>
+</ol>
+<h2 id="正则化技术防止过拟合">正则化技术(防止过拟合)
+</h2><h2 id="batch-normalization和layer-normalization">Batch Normalization和Layer Normalization
+</h2><h2 id="优化器">优化器
+</h2><h2 id="reference">Reference
+</h2><p>[1] <a class="link" href="https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=b8ddfd309f99fabf168aaa1b10b4063a&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142%5ev102%5epc_search_result_base9&amp;utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=b8ddfd309f99fabf168aaa1b10b4063a&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142^v102^pc_search_result_base9&utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&spm=1018.2226.3001.4187</a><br>
+[2] <a class="link" href="https://blog.csdn.net/seasonsyy/article/details/136124829?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522e47868d831ef55e9c4b37db9be731232%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=e47868d831ef55e9c4b37db9be731232&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-136124829-null-null.142%5ev102%5epc_search_result_base9&amp;utm_term=%E6%84%9F%E7%9F%A5%E6%9C%BA%E8%AE%AD%E7%BB%83&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/seasonsyy/article/details/136124829?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522e47868d831ef55e9c4b37db9be731232%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=e47868d831ef55e9c4b37db9be731232&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-136124829-null-null.142^v102^pc_search_result_base9&utm_term=%E6%84%9F%E7%9F%A5%E6%9C%BA%E8%AE%AD%E7%BB%83&spm=1018.2226.3001.4187</a><br>
+[3] <a class="link" href="https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=b8ddfd309f99fabf168aaa1b10b4063a&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142%5Ev102%5Epc_search_result_base9&amp;utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&amp;spm=1018.2226.3001.4187https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=b8ddfd309f99fabf168aaa1b10b4063a&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142%5Ev102%5Epc_search_result_base9&amp;utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=b8ddfd309f99fabf168aaa1b10b4063a&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142%5Ev102%5Epc_search_result_base9&utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&spm=1018.2226.3001.4187https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=b8ddfd309f99fabf168aaa1b10b4063a&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142%5Ev102%5Epc_search_result_base9&utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&spm=1018.2226.3001.4187</a><br>
+[4] <a class="link" href="https://zhuanlan.zhihu.com/p/369328305"  target="_blank" rel="noopener"
+    >https://zhuanlan.zhihu.com/p/369328305</a><br>
+[5] <a class="link" href="https://zhuanlan.zhihu.com/p/642537175"  target="_blank" rel="noopener"
+    >https://zhuanlan.zhihu.com/p/642537175</a><br>
+[6] <a class="link" href="https://blog.csdn.net/caip12999203000/article/details/127067360?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522aa20995c1e0fe5de0e2fb06bae4373e4%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=aa20995c1e0fe5de0e2fb06bae4373e4&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-127067360-null-null.142%5ev102%5epc_search_result_base9&amp;utm_term=%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/caip12999203000/article/details/127067360?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522aa20995c1e0fe5de0e2fb06bae4373e4%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=aa20995c1e0fe5de0e2fb06bae4373e4&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-127067360-null-null.142^v102^pc_search_result_base9&utm_term=%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0&spm=1018.2226.3001.4187</a></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/deep-learning/">Deep Learning</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.body, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2024 - 
+        
+        2025 JLING-L
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
