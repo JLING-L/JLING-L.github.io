@@ -3,42 +3,51 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://JLING-L.github.io/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/categories/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
-  </url><url>
-    <loc>https://JLING-L.github.io/tags/deep-learning/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/tags/llm/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/post/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/tags/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
   </url><url>
-    <loc>https://JLING-L.github.io/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B01-gpt%E7%B3%BB%E5%88%97/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
-  </url><url>
-    <loc>https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/</loc>
-    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+    <loc>https://JLING-L.github.io/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-dpoppo/</loc>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2025-04-01T21:01:52+08:00</lastmod>
+  </url><url>
+    <loc>https://JLING-L.github.io/tags/deep-learning/</loc>
+    <lastmod>2025-04-01T20:51:26+08:00</lastmod>
+  </url><url>
+    <loc>https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/</loc>
+    <lastmod>2025-04-01T20:51:26+08:00</lastmod>
+  </url><url>
+    <loc>https://JLING-L.github.io/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-gpt%E7%B3%BB%E5%88%97/</loc>
     <lastmod>2025-03-30T15:21:57+08:00</lastmod>
   </url><url>
-    <loc>https://JLING-L.github.io/p/colpali_blog/</loc>
+    <loc>https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/</loc>
+    <lastmod>2025-03-30T15:21:57+08:00</lastmod>
+  </url><url>
+    <loc>https://JLING-L.github.io/tags/rag/</loc>
+    <lastmod>2025-03-30T13:10:43+08:00</lastmod>
+  </url><url>
+    <loc>https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/</loc>
+    <lastmod>2025-03-30T13:10:43+08:00</lastmod>
+  </url><url>
+    <loc>https://JLING-L.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2025-03-30T13:10:43+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/tags/uie/</loc>
     <lastmod>2024-11-04T13:31:44+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</loc>
-    <lastmod>2024-11-04T13:31:44+08:00</lastmod>
-  </url><url>
-    <loc>https://JLING-L.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/</loc>
     <lastmod>2024-11-04T13:31:44+08:00</lastmod>
   </url><url>
     <loc>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/</loc>

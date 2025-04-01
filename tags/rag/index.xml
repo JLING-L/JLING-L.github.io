@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>RAG on JLING-L</title>
+        <link>https://JLING-L.github.io/tags/rag/</link>
+        <description>Recent content in RAG on JLING-L</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>JLING-L</copyright>
+        <lastBuildDate>Sun, 30 Mar 2025 13:10:43 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/tags/rag/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>多模态RAG | ColPali: Efficient Document Retrieval with Vision Language Models</title>
+        <link>https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/</link>
+        <pubDate>Sun, 30 Mar 2025 13:10:43 +0800</pubDate>
+        
+        <guid>https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/</guid>
+        <description>&lt;img src="https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/colpali.png" alt="Featured image of post 多模态RAG | ColPali: Efficient Document Retrieval with Vision Language Models" /&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -2,18 +2,18 @@
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n">
-<title>深度学习基础 | 感知机、激活函数、正则化、BN和LN、优化器</title>
+<title>深度学习基础1 | 感知机、激活函数</title>
 
-<link rel='canonical' href='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/'>
+<link rel='canonical' href='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/'>
 
-<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="深度学习基础 | 感知机、激活函数、正则化、BN和LN、优化器">
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="深度学习基础1 | 感知机、激活函数">
 <meta property='og:description' content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n">
-<meta property='og:url' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/'>
+<meta property='og:url' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/'>
 <meta property='og:site_name' content='JLING-L'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='deep learning' /><meta property='article:published_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='article:modified_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network.png' />
-<meta name="twitter:title" content="深度学习基础 | 感知机、激活函数、正则化、BN和LN、优化器">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='deep learning' /><meta property='article:published_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='article:modified_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network.png' />
+<meta name="twitter:title" content="深度学习基础1 | 感知机、激活函数">
 <meta name="twitter:description" content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network.png' />
+    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network.png' />
     </head>
     <body class="
     article-page
@@ -232,9 +232,6 @@
     <li><a href="#多层感知机-多层神经网络">多层感知机 (多层神经网络)</a></li>
     <li><a href="#激活函数">激活函数</a></li>
     <li><a href="#梯度消失和梯度爆炸">梯度消失和梯度爆炸</a></li>
-    <li><a href="#正则化技术防止过拟合">正则化技术(防止过拟合)</a></li>
-    <li><a href="#batch-normalization和layer-normalization">Batch Normalization和Layer Normalization</a></li>
-    <li><a href="#优化器">优化器</a></li>
     <li><a href="#reference">Reference</a></li>
   </ol>
 </nav>
@@ -250,13 +247,13 @@
     <article class="has-image main-article">
     <header class="article-header">
         <div class="article-image">
-            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/">
-                <img src="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network_hu_8dd330bc2af1f5f1.png"
-                        srcset="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network_hu_8dd330bc2af1f5f1.png 800w, /p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/deep_neural_network_hu_90554e35923cbce1.png 1600w"
+            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/">
+                <img src="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network_hu_8dd330bc2af1f5f1.png"
+                        srcset="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network_hu_8dd330bc2af1f5f1.png 800w, /p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network_hu_90554e35923cbce1.png 1600w"
                         width="800" 
                         height="451" 
                         loading="lazy"
-                        alt="Featured image of post 深度学习基础 | 感知机、激活函数、正则化、BN和LN、优化器" />
+                        alt="Featured image of post 深度学习基础1 | 感知机、激活函数" />
                 
             </a>
         </div>
@@ -275,7 +272,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E6%AD%A3%E5%88%99%E5%8C%96bn%E5%92%8Cln%E4%BC%98%E5%8C%96%E5%99%A8/">深度学习基础 | 感知机、激活函数、正则化、BN和LN、优化器</a>
+            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/">深度学习基础1 | 感知机、激活函数</a>
         </h2>
     
         
@@ -972,10 +969,8 @@ $$<p>
 <li>适当的权重初始化：Xavier初始化/He初始化，防止梯度在传播过程中过大或过小。</li>
 <li>使用Batch Normalization/Layer Normalization。</li>
 </ol>
-<h2 id="正则化技术防止过拟合">正则化技术(防止过拟合)
-</h2><h2 id="batch-normalization和layer-normalization">Batch Normalization和Layer Normalization
-</h2><h2 id="优化器">优化器
-</h2><h2 id="reference">Reference
+<p>权重初始化的具体方法、Normalization、正则化、优化器我们在下章再详细介绍。</p>
+<h2 id="reference">Reference
 </h2><p>[1] <a class="link" href="https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=b8ddfd309f99fabf168aaa1b10b4063a&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142%5ev102%5epc_search_result_base9&amp;utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
     >https://blog.csdn.net/illikang/article/details/82019945?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522b8ddfd309f99fabf168aaa1b10b4063a%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=b8ddfd309f99fabf168aaa1b10b4063a&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-82019945-null-null.142^v102^pc_search_result_base9&utm_term=%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C&spm=1018.2226.3001.4187</a><br>
 [2] <a class="link" href="https://blog.csdn.net/seasonsyy/article/details/136124829?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522e47868d831ef55e9c4b37db9be731232%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&amp;request_id=e47868d831ef55e9c4b37db9be731232&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-136124829-null-null.142%5ev102%5epc_search_result_base9&amp;utm_term=%E6%84%9F%E7%9F%A5%E6%9C%BA%E8%AE%AD%E7%BB%83&amp;spm=1018.2226.3001.4187"  target="_blank" rel="noopener"
@@ -1042,15 +1037,63 @@ $$<p>
             
                 
 <article class="has-image">
-    <a href="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B01-gpt%E7%B3%BB%E5%88%97/">
+    <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/">
         
         
             <div class="article-image">
-                <img src="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B01-gpt%E7%B3%BB%E5%88%97/gpt.f7c2dfddefde86df0765d5c6343e72ba_hu_b2e26e1ac43bdea7.png" 
+                <img src="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/normalization.96b1eab25950db8381af2247ffa485e3_hu_226789bbcddc8185.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post 大模型笔记1 | GPT系列"
+                        alt="Featured image of post 深度学习基础2 | 权重初始化、正则化、Normalization、优化器"
+                        
+                        data-hash="md5-lrHqsllQ24OBryJH/6SF4w==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">深度学习基础2 | 权重初始化、正则化、Normalization、优化器</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-dpoppo/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-dpoppo/po.314410826de280a1661f1d3e91f9fe3a_hu_6c671b39d24dfd6d.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 大模型笔记 | DPO、PPO"
+                        
+                        data-hash="md5-MUQQgm3igKFmHx0&#43;kfn&#43;Og==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">大模型笔记 | DPO、PPO</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-gpt%E7%B3%BB%E5%88%97/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-gpt%E7%B3%BB%E5%88%97/gpt.f7c2dfddefde86df0765d5c6343e72ba_hu_b2e26e1ac43bdea7.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 大模型笔记 | GPT系列"
                         
                         data-hash="md5-98Lf3e/eht8HZdXGND5yug==">
                 
@@ -1058,7 +1101,7 @@ $$<p>
         
 
         <div class="article-details">
-            <h2 class="article-title">大模型笔记1 | GPT系列</h2>
+            <h2 class="article-title">大模型笔记 | GPT系列</h2>
         </div>
     </a>
 </article>

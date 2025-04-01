@@ -7,7 +7,15 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>JLING-L</copyright>
-        <lastBuildDate>Mon, 04 Nov 2024 13:31:44 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 30 Mar 2025 13:10:43 +0800</lastBuildDate><atom:link href="https://JLING-L.github.io/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>多模态RAG | ColPali: Efficient Document Retrieval with Vision Language Models</title>
+        <link>https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/</link>
+        <pubDate>Sun, 30 Mar 2025 13:10:43 +0800</pubDate>
+        
+        <guid>https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/</guid>
+        <description>&lt;img src="https://JLING-L.github.io/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/colpali.png" alt="Featured image of post 多模态RAG | ColPali: Efficient Document Retrieval with Vision Language Models" /&gt;</description>
+        </item>
+        <item>
         <title>通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</title>
         <link>https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/</link>
         <pubDate>Mon, 04 Nov 2024 13:31:44 +0800</pubDate>

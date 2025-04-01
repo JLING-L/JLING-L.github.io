@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 论文：https://arxiv.org/abs/2304.08085\n代码：https://github.com/BeyonderXX/InstructUIE\n">
-<title>通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="">
+<title>深度学习基础2 | 权重初始化、正则化、Normalization、优化器</title>
 
-<link rel='canonical' href='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/'>
+<link rel='canonical' href='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/'>
 
-<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction">
-<meta property='og:description' content=" 论文：https://arxiv.org/abs/2304.08085\n代码：https://github.com/BeyonderXX/InstructUIE\n">
-<meta property='og:url' content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/'>
+<link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="深度学习基础2 | 权重初始化、正则化、Normalization、优化器">
+<meta property='og:description' content="">
+<meta property='og:url' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/'>
 <meta property='og:site_name' content='JLING-L'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='UIE' /><meta property='article:published_time' content='2024-11-04T13:31:44&#43;08:00'/><meta property='article:modified_time' content='2024-11-04T13:31:44&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg' />
-<meta name="twitter:title" content="通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction">
-<meta name="twitter:description" content=" 论文：https://arxiv.org/abs/2304.08085\n代码：https://github.com/BeyonderXX/InstructUIE\n"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='deep learning' /><meta property='article:published_time' content='2025-04-01T20:51:26&#43;08:00'/><meta property='article:modified_time' content='2025-04-01T20:51:26&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/normalization.png' />
+<meta name="twitter:title" content="深度学习基础2 | 权重初始化、正则化、Normalization、优化器">
+<meta name="twitter:description" content=""><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/normalization.png' />
     </head>
     <body class="
     article-page
@@ -205,63 +205,19 @@
     </ol>
 </aside>
 
-    <aside class="sidebar right-sidebar sticky">
-        
-            
-                
-    <section class="widget archives">
-        <div class="widget-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <line x1="5" y1="9" x2="19" y2="9" />
-  <line x1="5" y1="15" x2="19" y2="15" />
-  <line x1="11" y1="4" x2="7" y2="20" />
-  <line x1="17" y1="4" x2="13" y2="20" />
-</svg>
-
-
-
-        </div>
-        <h2 class="widget-title section-title">目录</h2>
-        
-        <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#instructuie">InstructUIE</a>
-      <ol>
-        <li><a href="#task-schema">Task Schema</a></li>
-        <li><a href="#auxiliary-tasks">Auxiliary Tasks</a></li>
-      </ol>
-    </li>
-    <li><a href="#ie-instructions">IE INSTRUCTIONS</a></li>
-    <li><a href="#experiments">Experiments</a>
-      <ol>
-        <li><a href="#supervised-experiments">Supervised Experiments</a></li>
-        <li><a href="#zero-shot-experiments">Zero-shot Experiments</a></li>
-      </ol>
-    </li>
-    <li><a href="#conclusion">Conclusion</a></li>
-  </ol>
-</nav>
-        </div>
-    </section>
-
-            
-        
-    </aside>
-
+    
 
             <main class="main full-width">
     <article class="has-image main-article">
     <header class="article-header">
         <div class="article-image">
-            <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework_hu_ba2fdc13032ada2.jpg"
-                        srcset="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework_hu_ba2fdc13032ada2.jpg 800w, /p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/framework_hu_12d01f3ceb3166e2.jpg 1600w"
+            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/">
+                <img src="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/normalization_hu_4299a73606ed9232.png"
+                        srcset="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/normalization_hu_4299a73606ed9232.png 800w, /p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/normalization_hu_1a28f6c3cb78aca8.png 1600w"
                         width="800" 
-                        height="370" 
+                        height="280" 
                         loading="lazy"
-                        alt="Featured image of post 通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction" />
+                        alt="Featured image of post 深度学习基础2 | 权重初始化、正则化、Normalization、优化器" />
                 
             </a>
         </div>
@@ -271,8 +227,8 @@
     
     <header class="article-category">
         
-            <a href="/categories/%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/" >
-                阅读笔记
+            <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" >
+                学习笔记
             </a>
         
     </header>
@@ -280,7 +236,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%963-instructuie-multi-task-instruction-tuning-for-unified-information-extraction/">通用信息抽取3 | InstructUIE: Multi-task Instruction Tuning for Unified Information Extraction</a>
+            <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%802-%E6%9D%83%E9%87%8D%E5%88%9D%E5%A7%8B%E5%8C%96%E6%AD%A3%E5%88%99%E5%8C%96normalization%E4%BC%98%E5%8C%96%E5%99%A8/">深度学习基础2 | 权重初始化、正则化、Normalization、优化器</a>
         </h2>
     
         
@@ -302,7 +258,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2024-11-04</time>
+                <time class="article-time--published">2025-04-01</time>
             </div>
         
 
@@ -317,7 +273,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 5 分钟
+                    阅读时长: 0 分钟
                 </time>
             </div>
         
@@ -332,70 +288,7 @@
     <section class="article-content">
     
     
-    <img src="authors.jpg" style="zoom:70%" />
-<p>论文：https://arxiv.org/abs/2304.08085<br>
-代码：https://github.com/BeyonderXX/InstructUIE</p>
-<img src="introduction.jpg" style="zoom:60%" />
-<p>之前的笔记中我们介绍了UIE(通用信息抽取1)和USM(通用信息抽取2)。我们先回顾一下这两篇工作：</p>
-<ol>
-<li>UIE<br>
-UIE通过设计的结构提取语言SEL对异构IE结构进行统一建模，使用结构模式指令器SSI为不同IE任务生成目标结构，通过在多个数据集上预训练模型捕获通用IE能力。<br>
-UIE将IE任务统一为seq2seq生成任务，输入为文本形式，输出为对应的结构化信息。<br>
-局限性：由于不同任务的输出模式可能不同，UIE需要针对不同的下游任务进行单独的微调，以生成特定格式的输出。</li>
-<li>USM<br>
-USM将IE任务解耦为结构化和概念化两个基本任务。通过TTL操作结构化信息，获取基本信息单元。通过LTL、TLL操作概念化信息，在label和基本信息单元间建立链接。<br>
-USM基于语义匹配机制，通过比对文本span与语义标签的相似性来完成IE任务。<br>
-局限性：将IE转化为语义匹配任务，难以与生成式语言模型集成；需要对每个单词进行语义匹配，导致训练和推理时间显著增加。</li>
-</ol>
-<p>LLM通过多任务训练和统一编码展现出强大的泛化能力，而有研究表明，LLM在IE任务上仍有显著的性能差距。</p>
-<p>那么，是否有办法激发LLM的潜在知识来完成IE任务？</p>
-<h2 id="instructuie">InstructUIE
-</h2><h3 id="task-schema">Task Schema
-</h3><p>为了更好地转移和利用在预训练语言模型中学习到的知识，将IE任务重新表述为seq2seq形式，并微调LLM。如图所示，每个任务实例都用四个属性格式化：<br>
-<img src="example1.jpg" style="zoom:50%" /></p>
-<ol>
-<li>任务指令(Task Instruction)：提供详细的指导，说明如何从输入文本中提取相关信息，并生成所需的输出结构。具体内容包括要提取的信息类型、输出结构的格式以及提取过程中需要遵循的额外约束或规则。</li>
-<li>选项(Options)：定义任务的输出标签约束，表示模型可以为给定输入生成的可能输出集。例如，在命名实体识别(NER)中，选项可能包括&quot;person&quot;、&ldquo;organization&rdquo;、&ldquo;location&quot;等实体标签；在关系提取(RE)中，选项可能代表可以提取的关系类型，如&quot;works for&rdquo;、&ldquo;born in&quot;等；在事件提取(EE)中，选项可能对应不同事件类型的标签，如&quot;beginning&rdquo;、&ldquo;end&quot;等。</li>
-<li>文本(Text)：任务实例的输入句子，与任务指令和选项一起输入预训练的语言模型，使模型能够为给定任务生成所需的输出序列。</li>
-<li>输出(Output)：将样本的原始标签转换为句子格式。对于NER，输出格式为&quot;entity tag: entity span&rdquo;；对于RE，输出格式为&quot;relationship: head entity, tail entity&quot;； 对于EE，输出格式为&quot;event tag: trigger word, argument tag: argument span&quot;； 如果输入中没有与提供选项匹配的结构信息，则输出&quot;None&quot;。</li>
-</ol>
-<h3 id="auxiliary-tasks">Auxiliary Tasks
-</h3><p>辅助任务，与主任务一起训练。</p>
-<ol>
-<li>NER：引入了span extraction task和entity typing task。span extraction task旨在从输入句子中提取实体span，而entity typing task旨在识别实体的类型。</li>
-<li>RE：引入了entity pair extraction task和relation classification task。entity pair extraction task旨在提取关系中涉及的实体对，而relation classification task旨在对实体对之间的关系类型进行分类。</li>
-<li>EE：引入了trigger extraction task和argument extraction task。trigger extraction task旨在提取触发事件的触发词，而argument extraction task旨在提取相关的参数。</li>
-</ol>
-<h2 id="ie-instructions">IE INSTRUCTIONS
-</h2><p>IE INSTRUCTIONS收集了32个公开可用的数据集，涵盖三种类型的IE任务：NER、RE和EE。除了新闻和维基数据等通用领域的来源之外，还包括来自科学、医疗保健、社交媒体和交通等各个领域的语料库，以确保数据集的多样性。<br>
-数据处理步骤：</p>
-<ol>
-<li>统一不同数据集中语义相同但名称不同的标签的名称。</li>
-<li>将带有下划线、缩写或特殊格式的标签转换为自然语言格式。例如，将标签&quot;people person place of birth&quot;重命名为&quot;place of birth&quot;。</li>
-<li>将所有数据集转换为文本到文本格式，确保所有任务中输入输出对的一致表示。</li>
-</ol>
-<p>数据集构成如图所示：<br>
-<img src="dataset.jpg" style="zoom:50%" /></p>
-<h2 id="experiments">Experiments
-</h2><p>backbone：FlanT5-11B</p>
-<h3 id="supervised-experiments">Supervised Experiments
-</h3><p>Supervised学习设置：在训练期间为所有任务提供指令，模型在每个任务的标注数据上进行微调，使其能够学习特定任务的特征。为了平衡数据集，作者采用了抽样策略。即为每个数据集采样10,000个示例，少于10,000个样本的数据集使用所有示例。<br>
-<img src="supervised_experiment1.jpg" style="zoom:65%" /><br>
-<img src="supervised_experiment2.jpg" style="zoom:53%" /><br>
-<img src="supervised_experiment3.jpg" style="zoom:57%" /></p>
-<h3 id="zero-shot-experiments">Zero-shot Experiments
-</h3><p>Zero-shot学习设置：在训练期间仅为部分任务提供指令，模型在未见过的任务上进行评估，无需额外的微调。作者在18个NER数据集和6个RE数据集上训练了模型，并在7个NER数据集和2个RE数据集上进行测试(训练阶段删除了zero-shot实验需要测试的数据集)。<br>
-<img src="zero_shot_experiment1.jpg" style="zoom:60%" /><br>
-<img src="zero_shot_experiment2.jpg" style="zoom:60%" /><br>
-<img src="zero_shot_experiment3.jpg" style="zoom:60%" /></p>
-<p>ps：详细的实验结果可以查看原文。</p>
-<h2 id="conclusion">Conclusion
-</h2><ol>
-<li>提出了UIE的一个End-to-End框架——InstructUIE，它利用自然语言指令来指导IE任务。</li>
-<li>引入新的基准数据集IE INSTRUCTIONS。该基准由32个不同的信息提取数据集组成，这些数据集已统一为文本到文本格式，允许对各种IE任务进行一致和标准化的评估。</li>
-<li>实验结果表明，InstructUIE在监督和zero-shot下实现了SOTA，使用单个多任务模型解决了多个任务。</li>
-</ol>
-
+    
 </section>
 
 
@@ -403,7 +296,7 @@ USM基于语义匹配机制，通过比对文本span与语义标签的相似性�
     
     <section class="article-tags">
         
-            <a href="/tags/uie/">UIE</a>
+            <a href="/tags/deep-learning/">Deep Learning</a>
         
     </section>
 
@@ -449,23 +342,23 @@ USM基于语义匹配机制，通过比对文本span与语义标签的相似性�
             
                 
 <article class="has-image">
-    <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/">
+    <a href="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/">
         
         
             <div class="article-image">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%962-universal-information-extraction-as-unified-semantic-matching/cover.157d0dcf250c8790d3e9941a45434f90_hu_cfaea39148123354.jpg" 
+                <img src="/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network.ca7d3678ced2ec695a9a33f07285ce0e_hu_aaf9c0e0a65afee7.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post 通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching"
+                        alt="Featured image of post 深度学习基础1 | 感知机、激活函数"
                         
-                        data-hash="md5-FX0NzyUMh5DT6ZQaRUNPkA==">
+                        data-hash="md5-yn02eM7S7GlamjPwcoXODg==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">通用信息抽取2 | Universal Information Extraction as Unified Semantic Matching</h2>
+            <h2 class="article-title">深度学习基础1 | 感知机、激活函数</h2>
         </div>
     </a>
 </article>
@@ -473,23 +366,23 @@ USM基于语义匹配机制，通过比对文本span与语义标签的相似性�
             
                 
 <article class="has-image">
-    <a href="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/">
+    <a href="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-dpoppo/">
         
         
             <div class="article-image">
-                <img src="/p/%E9%80%9A%E7%94%A8%E4%BF%A1%E6%81%AF%E6%8A%BD%E5%8F%961-unified-structure-generation-for-universal-information-extraction/uie_framwork.a2b90c7f6340d67963e25ce5629387ad_hu_dc898b282d61b37e.jpg" 
+                <img src="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-dpoppo/po.314410826de280a1661f1d3e91f9fe3a_hu_6c671b39d24dfd6d.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post 通用信息抽取1 | Unified Structure Generation for Universal Information Extraction"
+                        alt="Featured image of post 大模型笔记 | DPO、PPO"
                         
-                        data-hash="md5-orkMf2NA1nlj4lzlYpOHrQ==">
+                        data-hash="md5-MUQQgm3igKFmHx0&#43;kfn&#43;Og==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">通用信息抽取1 | Unified Structure Generation for Universal Information Extraction</h2>
+            <h2 class="article-title">大模型笔记 | DPO、PPO</h2>
         </div>
     </a>
 </article>
@@ -497,23 +390,23 @@ USM基于语义匹配机制，通过比对文本span与语义标签的相似性�
             
                 
 <article class="has-image">
-    <a href="/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/">
+    <a href="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-gpt%E7%B3%BB%E5%88%97/">
         
         
             <div class="article-image">
-                <img src="/p/%E5%A4%9A%E6%A8%A1%E6%80%81rag-colpali-efficient-document-retrieval-with-vision-language-models/colpali.a7454f707aff1883465ea620be2a372e_hu_169a292afe6f82.png" 
+                <img src="/p/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%AC%94%E8%AE%B0-gpt%E7%B3%BB%E5%88%97/gpt.f7c2dfddefde86df0765d5c6343e72ba_hu_b2e26e1ac43bdea7.png" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post 多模态RAG | ColPali: Efficient Document Retrieval with Vision Language Models"
+                        alt="Featured image of post 大模型笔记 | GPT系列"
                         
-                        data-hash="md5-p0VPcHr/GINGXqYgvio3Lg==">
+                        data-hash="md5-98Lf3e/eht8HZdXGND5yug==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">多模态RAG | ColPali: Efficient Document Retrieval with Vision Language Models</h2>
+            <h2 class="article-title">大模型笔记 | GPT系列</h2>
         </div>
     </a>
 </article>
