@@ -45,28 +45,30 @@
 Transformer允许模型在大规模文本上进行无监督语言建模，且适用于文本生成、分类、翻译、摘要、问答等多种任务。此外，与RNN、CNN等模型相比，Transformer有更强的对长距离依赖的捕捉能力。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;为什么用decoder-only架构：&lt;/strong&gt; GPT-1的任务是语言建模，不需要编码完整的输入句子，只需要逐步预测下一个词，这符合Transformer decoder的特点。&lt;/p&gt;
 &lt;h3 id=&#34;unsupervised-pre-training&#34;&gt;Unsupervised pre-training
-&lt;/h3&gt;$$
+&lt;/h3&gt;&lt;p&gt;GPT-1将文本输入转换为连续的token序列进行处理，给定一个无标签序列$U={u_1, u_2, &amp;hellip;, u_n}$，基于自回归语言建模的方法来学习文本表示，目标是让模型最大化给定上下文的情况下预测下一个token的概率。训练目标是最大化整个数据集的对数似然：&lt;/p&gt;
+$$
 L_1(U) = \sum_{i} logP(u_i|u_{i-k},...,u_{i-1};\Theta)
-$$&lt;p&gt;
-其中，$k$是上下文窗口的大小，即在预测当前token时，模型可以看到前k个token作为上下文信息，$\Theta$是模型的参数(GPT-1的神经网络权重)。使用随机梯度下降法进行训练。&lt;/p&gt;
+$$&lt;p&gt;其中，$k$是上下文窗口的大小，即在预测当前token时，模型可以看到前k个token作为上下文信息，$\Theta$是模型的参数(GPT-1的神经网络权重)。使用随机梯度下降法进行训练。&lt;/p&gt;
+&lt;p&gt;给定上下文的下一个token的概率分布由以下公式计算：&lt;/p&gt;
 $$
 h_0 = UW_e + W_p
 $$$$
 h_l = transformer(h_{l-1})
 $$$$
 P(u) = softmax(h_nW_e^T)
-$$&lt;p&gt;
-其中，$W_e$表示词嵌入矩阵；$W_p$表示位置嵌入矩阵；$W_e^T$表示线性映射层对应的参数矩阵，维度是词表的大小。&lt;/p&gt;
+$$&lt;p&gt;其中，$W_e$表示词嵌入矩阵；$W_p$表示位置嵌入矩阵；$W_e^T$表示线性映射层对应的参数矩阵，维度是词表的大小。&lt;/p&gt;
 &lt;h3 id=&#34;supervised-fine-tuning&#34;&gt;Supervised fine-tuning
 &lt;/h3&gt;&lt;p&gt;得到无监督预训练模型后，为了使参数适应监督目标任务，可以使用监督数据对模型进行微调。&lt;/p&gt;
+&lt;p&gt;假设有标注数据$C={(x_1, &amp;hellip;, x_m, y)}$，$x$表示输入序列，$y$表示标签。将这些token输入预训练模型，得到特征向量$h_l^m$，再经过一个线性输出层进行预测，$W_y$为线性输出层的参数：&lt;/p&gt;
 $$
 P(y|x_1, ..., x_m) = softmax(h_m^lW_y)
-$$$$
+$$&lt;p&gt;定义交叉熵损失函数：&lt;/p&gt;
+$$
 L_2(C) = \sum_{(x,y)}logP(y|x_1, ..., x_m)
-$$$$
+$$&lt;p&gt;研究发现，如果在有监督的微调过程中加入语言建模作为辅助目标，能够显著提高模型的性能，提升模型的泛化能力，加速收敛速度。因此，将语言建模作为辅助任务，模型在优化时需同时最大化有监督任务的目标$L_2(C)$和语言建模的目标$L_1(C)$两个目标。联合优化目标为：&lt;/p&gt;
+$$
 L_3(C) = L_2(C) + \lambda·L_1(C)
-$$&lt;p&gt;
-其中，$\lambda$是一个超参数，用于平衡这两个目标的影响。&lt;/p&gt;
+$$&lt;p&gt;其中，$\lambda$是一个超参数，用于平衡这两个目标的影响。&lt;/p&gt;
 &lt;p&gt;在微调阶段，除了原本的预训练参数外，仅需要额外优化线性输出层的参数$W_y$和分隔符token的嵌入矩阵。&lt;/p&gt;
 &lt;h3 id=&#34;task-specific-input-transformations&#34;&gt;Task-specific input transformations
 &lt;/h3&gt;&lt;p&gt;对于一些任务，如文本分类，因为它们的输入结构较为简单，可以直接对模型进行微调。而对于问答或文本蕴含等任务，它们的输入包含结构化信息，例如问答任务的输入可能包含文本、问题和多个可能的答案，文本蕴含任务的输入包含前提和假设两个句子。由于预训练模型是在连续文本序列上训练的，因此需要对这些任务的输入做一定的调整，才能使模型适应这些结构化的输入。&lt;/p&gt;
@@ -101,14 +103,16 @@ $$&lt;p&gt;
 &lt;li&gt;batch size增大：batch Size增加到512。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;unsupervised-pre-training-1&#34;&gt;Unsupervised pre-training
-&lt;/h3&gt;$$
+&lt;/h3&gt;&lt;p&gt;语言建模的目标是预测下一个词，而又因为语言是有顺序的，所以可以把一句话的概率拆解成逐个单词的条件概率：&lt;/p&gt;
+$$
 p(x) = \prod_{i=1}^{n} p(s_n \mid s_1, \dots, s_{n-1})
-$$$$
+$$&lt;p&gt;单任务学习可以表示为条件分布估计：&lt;/p&gt;
+$$
 p(output|input)
-$$$$
+$$&lt;p&gt;一个通用模型应当能够处理多种不同任务，因此需要建模：&lt;/p&gt;
+$$
 p(output|input, task)
-$$&lt;p&gt;
-而任务的条件化通常有两种方式：&lt;/p&gt;
+$$&lt;p&gt;而任务的条件化通常有两种方式：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;架构层面：例如针对不同任务涉及专门的子网络或特定的参数分支。&lt;/li&gt;
 &lt;li&gt;算法层面：例如MAML，它使用内外循环优化，使模型能够快速适应新任务。内循环指在当前任务上进行快速微调，外循环指优化整个模型，使其在遇到新任务时能快速适应。&lt;/li&gt;
@@ -184,19 +188,19 @@ In-context learning是指模型在推理过程中，通过上下文中的示例�
 &lt;h4 id=&#34;reward-modeling-rm&#34;&gt;Reward modeling (RM)
 &lt;/h4&gt;&lt;p&gt;RM基于SFT模型进行，去除了最终的解嵌层(用于将词嵌入转换回模型的输出空间)后进行训练。该模型接受一个提(prompt)和一个响应(response)，并输出一个标量奖励值，该值表示给定响应的质量。&lt;/p&gt;
 &lt;p&gt;这里仅使用了6B参数的奖励模型，因为175B奖励模型训练时需要的计算资源非常高且不稳定，因此不适合作为强化学习(RL)中的价值函数。&lt;/p&gt;
+&lt;p&gt;采用交叉熵损失，通过比较数据来训练奖励模型。奖励的差异表示模型响应的对数概率，表示一个响应比另一个响应更符合人类偏好。损失函数表示为：&lt;/p&gt;
 $$
 \text{loss}(\theta) = - \frac{1}{\binom{K}{2}} \mathbb{E}_{(x, y_w, y_l) \sim D} \left[ \log \left( \sigma \left( r_\theta(x, y_w) - r_\theta(x, y_l) \right) \right) \right]
-$$&lt;p&gt;
-其中，$r_\theta(x, y)$是奖励模型对提示$x$和响应$y$的标量输出；$y_w$是比较中更好的响应，$y_l$是另一个相应；$D$是包含人类比较数据的数据集；$\sigma$是Sigmoid函数，用于将差值转换为概率。&lt;/p&gt;
+$$&lt;p&gt;其中，$r_\theta(x, y)$是奖励模型对提示$x$和响应$y$的标量输出；$y_w$是比较中更好的响应，$y_l$是另一个相应；$D$是包含人类比较数据的数据集；$\sigma$是Sigmoid函数，用于将差值转换为概率。&lt;/p&gt;
 &lt;p&gt;为了加速数据收集，标签员每次会看到4~9个响应来进行排名，这样每个提示就会有多个候选响应。对于每个提示，标注员会
 从$K$个响应中选择两个进行比较，如果$k=4$，就会有$4×(4-1)/2=6$个比较。&lt;/p&gt;
 &lt;p&gt;由于每个任务中的比较数据是高度相关的，研究发现如果直接将所有比较混合到一个数据集中，经过一次训练会导致奖励模型过拟合。因此，将每个提示的所有比较作为一个批次进行训练。&lt;/p&gt;
 &lt;h4 id=&#34;reinforcement-learning-rl&#34;&gt;Reinforcement learning (RL)
 &lt;/h4&gt;&lt;p&gt;使用PPO算法对SFT模型进行强化学习环境中的微调。使用的环境是一个bandit环境，该环境会随机提供一个客户输入的prompt，并期望模型生成相应的回答。收到prompt并生成回答后，使用RM对生成的回答进行评估，并提供奖励。为了避免奖励模型过度优化并保持原始模型的完整性，在每个token添加KL惩罚。&lt;/p&gt;
+&lt;p&gt;考虑到在标准公共NLP数据集上评估时出现的性能回退问题，作者将预训练梯度与PPO梯度混合使用。强化学习训练的目标是最大化一个组合的目标函数：&lt;/p&gt;
 $$
 \text{objective}(\varphi) = \mathbb{E}_{(x,y) \sim D_{\pi_{\text{RL}}}} \left[ r_{\theta}(x, y) - \beta \log \left( \frac{\pi_{\text{RL}}(y | x)}{\pi_{\text{SFT}}(y | x)} \right) \right] + \gamma \mathbb{E}_{x \sim D_{\text{pretrain}}} \left[ \log \left( \pi_{\text{RL}}(x) \right) \right]
-$$&lt;p&gt;
-强化学习训练的目标函数旨在平衡：&lt;/p&gt;
+$$&lt;p&gt;强化学习训练的目标函数旨在平衡：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;最大化奖励模型预测的奖励$(r_{\theta}(x, y))$;&lt;/li&gt;
 &lt;li&gt;最小化强化学习策略与监督训练策略之间的差异$(\beta \log \left( \frac{\pi_{\text{RL}}(y | x)}{\pi_{\text{SFT}}(y | x)} \right))$，其中$\beta$为KL惩罚系数；&lt;/li&gt;
