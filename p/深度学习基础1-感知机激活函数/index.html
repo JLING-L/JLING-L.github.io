@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="神经元 神经网络(Neural Network)的起源可以追溯到20世纪40年代，沃伦·麦卡洛克(Warren McCulloch)和沃尔特·皮茨(Walter Pitts)两位学者提出了MP神经元，这一数学模型模仿了生物神经元的激活模式。\n">
 <title>深度学习基础1 | 感知机、激活函数</title>
 
 <link rel='canonical' href='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/'>
 
 <link rel="stylesheet" href="/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css"><meta property='og:title' content="深度学习基础1 | 感知机、激活函数">
-<meta property='og:description' content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n">
+<meta property='og:description' content="神经元 神经网络(Neural Network)的起源可以追溯到20世纪40年代，沃伦·麦卡洛克(Warren McCulloch)和沃尔特·皮茨(Walter Pitts)两位学者提出了MP神经元，这一数学模型模仿了生物神经元的激活模式。\n">
 <meta property='og:url' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/'>
 <meta property='og:site_name' content='JLING-L'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='deep learning' /><meta property='article:published_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='article:modified_time' content='2025-03-30T15:21:57&#43;08:00'/><meta property='og:image' content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network.png' />
 <meta name="twitter:title" content="深度学习基础1 | 感知机、激活函数">
-<meta name="twitter:description" content="神经元 $$ z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3) $$$$ \\text{sgn}(x) = \\begin{cases} 1, & x \\geq 0 \\\\ 0, & x < 0 \\end{cases} $$ 其中的x表示加权输入的总和，当输入总和$\\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。\n"><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="神经元 神经网络(Neural Network)的起源可以追溯到20世纪40年代，沃伦·麦卡洛克(Warren McCulloch)和沃尔特·皮茨(Walter Pitts)两位学者提出了MP神经元，这一数学模型模仿了生物神经元的激活模式。\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://JLING-L.github.io/p/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%801-%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0/deep_neural_network.png' />
     </head>
     <body class="
@@ -309,7 +309,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 14 分钟
+                    阅读时长: 15 分钟
                 </time>
             </div>
         
@@ -325,7 +325,9 @@
     
     
     <h2 id="神经元">神经元
-</h2>$$
+</h2><p>神经网络(Neural Network)的起源可以追溯到20世纪40年代，沃伦·麦卡洛克(Warren McCulloch)和沃尔特·皮茨(Walter Pitts)两位学者提出了MP神经元，这一数学模型模仿了生物神经元的激活模式。</p>
+<img src="neurons.png" style="zoom:53%" />  
+$$
 z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3)
 $$$$
 \text{sgn}(x) =
@@ -354,7 +356,13 @@ $$<p>
 <li>不能自我学习：所有权重和阈值均需要人工设计。</li>
 </ol>
 <h2 id="单层感知机-单层神经网络">单层感知机 (单层神经网络)
-</h2>$$
+</h2><p>1958年，Frank Rosenblatt提出了感知机模型，通过引入学习算法，使得神经网络能够通过训练调整权重，而无需人工设计。<br>
+感知机的目标是通过不断调整权重，使模型能够更好地预测或分类。</p>
+<img src="perceptron.png" style="zoom:53%" />   
+<p>在神经元模型的“输入”位置添加神经元节点，标志其为“输入单元”。<br>
+感知机中有两个层次，分别是输入层和输出层。输入层里的“输入单元”只负责传输数据，不做计算；输出层里的“输出单元”则需要对前面一层的输入进行计算。</p>
+<img src="perceptron_1.png" style="zoom:33%" />  
+$$
 z_1 = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3)
 $$$$
 z_2 = g(a_1 * W_4 + a_2 * W_5 + a_3 * W_6)
@@ -718,6 +726,7 @@ $$<img src="softmax.jpg" style="zoom:63%" />
 <p>Softmax适用于多分类问题，它将输出转换为概率分布，并且确保所有类别的概率之和为 1。</p>
 </li>
 </ol>
+<p><strong>(3) Tanh激活函数</strong></p>
 $$
 tanh(x) = \frac{e^x-e^{-x}}{e^x+e^{-x}}
 $$$$
@@ -734,6 +743,7 @@ $$<img src="tanh.png" style="zoom:43%" />
 <li>存在梯度消失问题。</li>
 <li>同样需要进行指数计算。</li>
 </ol>
+<p><strong>(4) ReLU激活函数</strong></p>
 $$
 f(x) =
 \begin{cases} 
@@ -758,6 +768,7 @@ $$<img src="relu.png" style="zoom:43%" />
 <li>输入为负时，输出为0，梯度也为0，相当于神经元直接死亡(Dead Neuron)，而且不会复活，这可能导致特征的学习不充分。</li>
 <li>与Sigmoid一样，其输出不是以0为中心的。</li>
 </ol>
+<p><strong>(5) Leaky ReLU激活函数</strong></p>
 $$
 f(x) =
 \begin{cases} 
@@ -771,14 +782,15 @@ f'(x) =
 \lambda, & x < 0
 \end{cases}, \lambda \in (0, 1)
 $$<img src="leaky_relu.png" style="zoom:43%" />
-<p><strong>优点</strong><br>
-通过在负半轴添加一个小的正斜率，使得负轴的信息不会全部丢失，以此解决神经元死亡的问题。</p>
+<p><strong>优点</strong></p>
+<p>通过在负半轴添加一个小的正斜率，使得负轴的信息不会全部丢失，以此解决神经元死亡的问题。</p>
 <p><strong>缺点</strong></p>
 <ol>
 <li>超参数$\lambda$需要人为设定，但不同任务可能需要不同的最佳$\lambda$，增加了超参数调优的复杂度。</li>
 <li>当输入值较大时，Leaky ReLU仍可能导致梯度爆炸，需要配合Batch Normalization或其他正则化方法。</li>
 <li>在实际操作中，尚未完全证明Leaky ReLU总是比ReLU更好。</li>
 </ol>
+<p><strong>(6) PReLU激活函数</strong></p>
 $$
 f(x) =
 \begin{cases} 
@@ -808,6 +820,7 @@ $$<p>参数α通常为0到1之间的数字，并且通常相对较小:</p>
 <li>PReLU让每个神经元都学习一个额外的参数$𝛼$，这会增加模型的自由度，导致模型在小数据集上可能过拟合。</li>
 <li>在某些简单任务中，ReLU已经足够有效，而PReLU的额外参数反而可能带来不必要的复杂度。</li>
 </ol>
+<p><strong>(7) RReLU激活函数</strong></p>
 $$
 f(x) =
 \begin{cases} 
@@ -831,6 +844,7 @@ $$<img src="rrelu.png" style="zoom:43%" />
 <li>参数$𝛼$取值随机，训练过程中模型参数的更新方向可能会有所波动，在某些任务上可能会影响收敛速度。</li>
 <li>在测试时使用固定的$𝛼$(取均值)，而训练时是随机的，可能导致模型表现略有偏差。</li>
 </ol>
+<p><strong>(8) ELU激活函数</strong></p>
 $$
 f(x) =
 \begin{cases} 
@@ -855,6 +869,7 @@ $$<img src="elu.png" style="zoom:43%" />
 <li>在输入为负时需要进行指数计算，计算稍复杂。</li>
 <li>$\alpha$参数需要额外调整。</li>
 </ol>
+<p><strong>(9) SELU激活函数</strong></p>
 $$
 f(x) =
 \lambda\begin{cases} 
@@ -879,6 +894,7 @@ $$<img src="selu.png" style="zoom:43%" />
 <li>SELU本身已经具备了自归一化特性，它不适合与Batch Normalization结合使用。如果同时使用BN，可能会破坏其自归一化能力。</li>
 <li>SELU的指数部分在负值区域导致输出非常小，可能会导致过度的稀疏性。类似神经元长时间“死亡”。</li>
 </ol>
+<p><strong>(10) CELU激活函数</strong></p>
 $$
 f(x) =
 \lambda\begin{cases} 
@@ -905,6 +921,7 @@ $$<img src="celu.png" style="zoom:43%" />
 <li>与ELU一样具有自归一化特性，与BN不完全兼容。</li>
 <li>CELU的表现依赖于超参数$\alpha$，该参数控制了负区间的输出。</li>
 </ol>
+<p><strong>(11) GELU激活函数</strong></p>
 $$
 GELU(x) = 0.5x(1+tanh(\sqrt{\frac{2}{\pi}}(x+0.044715x^3)))
 $$<img src="gelu.png" style="zoom:43%" />
@@ -914,8 +931,9 @@ $$<img src="gelu.png" style="zoom:43%" />
 <li>负值范围输出非零梯度，防止了梯度消失。</li>
 <li>GELU利用高斯误差函数(误差函数与标准正态分布密切相关)，对输入进行概率化变换，这种特性有助于神经网络学习更加复杂和非线性的模式。</li>
 </ol>
-<p><strong>缺点</strong><br>
-GELU的优势主要体现在深度神经网络中，对于较浅的网络，ReLU等激活函数可能已经足够好。使用GELU可能无法提供显著的性能提升，反而由于计算开销的增加，可能会降低网络的训练和推理效率。</p>
+<p><strong>缺点</strong></p>
+<p>GELU的优势主要体现在深度神经网络中，对于较浅的网络，ReLU等激活函数可能已经足够好。使用GELU可能无法提供显著的性能提升，反而由于计算开销的增加，可能会降低网络的训练和推理效率。</p>
+<p><strong>(12) Swish激活函数</strong></p>
 $$
 f(x) = x·\sigma(\beta x)
 $$$$
@@ -933,6 +951,7 @@ $$<img src="swish.png" style="zoom:43%" />
 <li>Swish的优势主要体现在深度神经网络中，特别是在处理更复杂的特征时。在一些浅层网络上，Swish可能不会比其他激活函数(如 ReLU或Sigmoid)带来显著的性能提升。</li>
 <li>由于其涉及到Sigmoid函数的计算，Swish的计算效率不如ReLU，在推理时的延迟可能较高。</li>
 </ol>
+<p><strong>(13) SwiGLU激活函数</strong></p>
 $$
 SwiGLU(x) = Swish(x)·\sigma (Wx+b)
 $$<p>
