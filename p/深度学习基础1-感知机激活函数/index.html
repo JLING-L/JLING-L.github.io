@@ -309,7 +309,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 15 分钟
+                    阅读时长: 17 分钟
                 </time>
             </div>
         
@@ -327,16 +327,17 @@
     <h2 id="神经元">神经元
 </h2><p>神经网络(Neural Network)的起源可以追溯到20世纪40年代，沃伦·麦卡洛克(Warren McCulloch)和沃尔特·皮茨(Walter Pitts)两位学者提出了MP神经元，这一数学模型模仿了生物神经元的激活模式。</p>
 <img src="neurons.png" style="zoom:53%" />  
+<p>一个经典的神经元模型如图所示，三个输入加权求和，再通过一个非线性函数，得到输出，公式可表示为：</p>
 $$
 z = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3)
-$$$$
+$$<p>sgn即符号函数，用于决定神经元是否被激活，它的数学表达式如下：</p>
+$$
 \text{sgn}(x) =
 \begin{cases} 
 1, & x \geq 0 \\
 0, & x < 0
 \end{cases}
-$$<p>
-其中的x表示加权输入的总和，当输入总和$\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。</p>
+$$<p>其中的x表示加权输入的总和，当输入总和$\geq0$时，神经元输出1(被激活)，否则输出0(未激活)。</p>
 <img src="neurons_1.png" style="zoom:53%" />
 <p>将sum、sgn绘制在一起表示神经元的内部计算。单个神经元可以引出多个相同值的有向箭头。</p>
 <p><strong>神经元模型的目标是什么？</strong></p>
@@ -362,22 +363,26 @@ $$<p>
 <p>在神经元模型的“输入”位置添加神经元节点，标志其为“输入单元”。<br>
 感知机中有两个层次，分别是输入层和输出层。输入层里的“输入单元”只负责传输数据，不做计算；输出层里的“输出单元”则需要对前面一层的输入进行计算。</p>
 <img src="perceptron_1.png" style="zoom:33%" />  
+<p>可以通过感知机的预测目标修改输出层，如图所示，输出层有两个输出单元，它可以用来预测向量，如[2,3]。此时，整个网络的输出为：</p>
 $$
 z_1 = g(a_1 * W_1 + a_2 * W_2 + a_3 * W_3)
 $$$$
 z_2 = g(a_1 * W_4 + a_2 * W_5 + a_3 * W_6)
-$$$$
+$$<p>也可以表示为：</p>
+$$
 z_1 = g(a_1 * W_{1,1} + a_2 * W_{1,2} + a_3 * W_{1,3})
 $$$$
 z_2 = g(a_1 * W_{2,1} + a_2 * W_{2,2} + a_3 * W_{2,3})
-$$$$
+$$<p>用矩阵乘法表示：</p>
+$$
 g(W*a) = z
-$$<p>
-其中，$a=[a_1,a_2,a_3]^T$；$z=[z_1,z_2]^T$；W为2行3列的矩阵。</p>
+$$<p>其中，$a=[a_1,a_2,a_3]^T$；$z=[z_1,z_2]^T$；W为2行3列的矩阵。</p>
 <p><strong>感知机是如何训练的？</strong></p>
+<p>前面介绍的内容是感知机的<strong>前向计算过程</strong>，对输入进行加权求和，然后通过激活函数(通常是阶跃函数，如sign)计算输出。为了使感知机具有更高的灵活性，通常还会加入一个偏置$b$，感知机可以表示为：</p>
 $$
 f(x) = sign(w^T·x+b)
-$$$$
+$$<p>其中，$sign(x)$为激活函数，对应激活、抑制两种状态：</p>
+$$
 sign(x) =
 \begin{cases} 
 +1, & x \geq 0 \\
@@ -389,28 +394,35 @@ $$<p><strong>感知机的几何解释</strong>：线性方程$w·x+b=0$对应于
 <li>当$w^T·x_i+b&lt;0$时，$y_i=-1$；</li>
 </ol>
 <img src="perceptron_2.png" style="zoom:33%" />
+<p>由于误分类样本的符号与真实标签相反，因此对于误分类样本$x_i$，有：</p>
 $$
 y_i(w^T·x_i+b)<0
-$$$$
+$$<p>因此，通过计算所有误分类样本到决策边界的负距离之和构造损失函数：</p>
+$$
 L(w, b) = - \sum_{i \in \mathcal{M}} y_i (w^T· x_i + b)
-$$$$
+$$<p>其中，$\mathcal{M}$是所有被误分类的样本集合。<br>
+感知机训练的目标是使预测值接近标签，即最小化损失，可以使用随机梯度下降法更新参数。先对梯度进行计算：</p>
+$$
 \nabla_w L = - \sum_{i \in \mathcal{M}} y_i x_i
 $$$$
 \nabla_b L = - \sum_{i \in \mathcal{M}} y_i
-$$$$
+$$<p>梯度下降的基本思想是按照梯度的反方向更新参数：</p>
+$$
 w = w - \eta \nabla_w L
 $$$$
 b = b - \eta \nabla_b L
-$$$$
+$$<p>对于感知机，每次只对一个误分类样本进行更新(随机梯度下降，SGD)，则公式转换为：</p>
+$$
 w = w + \eta y_ix_i
 $$$$
 b = b + \eta y_i
-$$<p>
-其中，$\eta (0&lt;\eta\leq 1)$为步长(学习率)。</p>
+$$<p>其中，$\eta (0&lt;\eta\leq 1)$为步长(学习率)。</p>
 <p><strong>什么是梯度？</strong></p>
+<p>梯度定义为损失函数$L$对模型参数$\theta$的偏导，表示损失函数在参数空间中的变化率：</p>
 $$
 \nabla_\theta L = (\frac{\partial L}{\partial \theta_1}, \frac{\partial L}{\partial \theta_2}, ..., \frac{\partial L}{\partial \theta_n})
-$$$$
+$$<p>模型训练目标是找到使损失函数最小的参数，梯度下降法更新梯度由以下公式表示：</p>
+$$
 \theta \leftarrow \theta-\eta\nabla_\theta L
 $$<p><strong>单层感知机代码</strong></p>
 <div class="highlight"><div class="chroma">
@@ -498,14 +510,16 @@ $$<p><strong>单层感知机代码</strong></p>
 <h2 id="多层感知机-多层神经网络">多层感知机 (多层神经网络)
 </h2><p>单层神经网络无法解决非线性问题(如异或问题)，但如果增加一个计算层，通过多次非线性映射，输入数据就可以被映射到更高维的特征空间，从而解决非线性可分问题。这个增加的计算层被称为隐藏层。增加的隐藏层由图中黄色的块表示：</p>
 <img src="perceptron_3.png" style="zoom:43%" />
+<p>隐藏层计算：</p>
 $$
 h_1 = f(w_{1,1}*x_1 + w_{2,1}*x_2 + w_{3,1}*x_3 + b_1)
 $$$$
 h_2 = f(w_{1,2}*x_1 + w_{2,2}*x_2 + w_{3,3}*x_3 + b_2)
-$$$$
+$$<p>其中，$f(·)$是一个非线性激活函数。<br>
+则模型的输出为：</p>
+$$
 y = v_1*h_1 + v_2*h_2 + b
-$$<p>
-如果$f(·)$是线性的，增加了隐藏层的多层感知机本质上还是一个线性模型。而多层感知机的目的是让模型可以处理非线性问题，因此，这里的$f(·)$需要使用非线性函数。</p>
+$$<p>如果$f(·)$是线性的，增加了隐藏层的多层感知机本质上还是一个线性模型。而多层感知机的目的是让模型可以处理非线性问题，因此，这里的$f(·)$需要使用非线性函数。</p>
 <p><strong>为什么使用非线性激活函数就可以增强模型能力？</strong></p>
 <p>任意非线性函数都可以通过多个分段线性函数的组合来进行近似和表示。而在多层感知机中，激活函数(如ReLU、sigmoid等)帮助神经网络实现了这种分段线性变换，从而使得它可以拟合任意的非线性关系。</p>
 <p>然而，多层神经网络需要处理多个层次的权重和偏置，在每一层之间进行矩阵乘法和激活函数的非线性变换。随着网络深度的增加，计算复杂度呈指数级增长。</p>
@@ -513,37 +527,50 @@ $$<p>
 <p><strong>链式法则</strong></p>
 <p>对于$f(g(x))$，导数为：$\frac{df}{dx} = \frac{df}{dg}·\frac{dg}{dx}$</p>
 <p><strong>前向传播</strong></p>
+<p>设输入为x，先推导一下前向传播的过程：<br>
+(1) 隐藏层：</p>
 $$
 h = \sigma(z_1)
 $$$$
 z_1 = w_1x+b_1
-$$$$
+$$<p>其中，$\sigma(·)$表示sigmoid激活函数。<br>
+(2) 输出层：</p>
+$$
 y = z_2
 $$$$
 z_2 = w_2h+b_2
-$$$$
+$$<p>(3) 目标值为t，计算损失：</p>
+$$
 L = \frac{1}{2}(y-t)^2
 $$<p><strong>反向传播</strong></p>
+<p>在多层感知机中，引入了反向传播的概念。它通过链式法则，高效计算每一层的梯度。具体而言，从输出层开始计算梯度，然后，输出层的梯度传递到上一层，以此类推。对于每一层，网络只需要计算该层的梯度，并将其传递到上一层。 <br>
+反向传播避免了显式地计算每个层的所有梯度，而是通过链式法则将梯度计算任务分解为局部的计算，从而简化了整体计算量。<br>
+我们推导一下整个过程：<br>
+(1) 损失对输出的梯度：</p>
 $$
 \frac{\alpha L}{\alpha y} = y-t
-$$$$
+$$<p>(2) 输出层参数的梯度：</p>
+$$
 \frac{\alpha L}{\alpha w_2} = \frac{\alpha L}{\alpha y}·\frac{\alpha y}{\alpha w_2} = (y-t)·h^T
 $$$$
 \frac{\alpha L}{\alpha b_2} = \frac{\alpha L}{\alpha y}·\frac{\alpha y}{\alpha b_2} = y-t
-$$$$
+$$<p>(3) 隐藏层输出的梯度：</p>
+$$
 \frac{\alpha L}{\alpha h} = \frac{\alpha L}{\alpha y}·\frac{\alpha y}{\alpha h} = (y-t)·W_2^T
-$$$$
+$$<p>隐藏层输入的梯度：</p>
+$$
 \frac{\alpha L}{\alpha z_1} = \frac{\alpha L}{\alpha h}·\frac{\alpha h}{\alpha z_1} = \frac{\alpha L}{\alpha h}·\sigma'(z_1)
-$$$$
+$$<p>(4) 隐藏层参数的梯度</p>
+$$
 \frac{\alpha L}{\alpha w_1} = \frac{\alpha L}{\alpha z_1}·\frac{\alpha z_1}{\alpha w_1} = \frac{\alpha L}{\alpha z_1}·x^T
 $$$$
 \frac{\alpha L}{\alpha b_1} = \frac{\alpha L}{\alpha z_1}·\frac{\alpha z_1}{\alpha b_1} = \frac{\alpha L}{\alpha z_1}
-$$$$
+$$<p>根据上述推导，我们可以观察到一个通用的公式，对于每一层的参数，有：</p>
+$$
 \frac{\alpha L}{\alpha w_l} = \frac{\alpha L}{\alpha z_l}·\frac{\alpha z_l}{\alpha w_l}
 $$$$
 \frac{\alpha L}{\alpha b_l} = \frac{\alpha L}{\alpha z_l}·\frac{\alpha z_l}{\alpha b_l}
-$$<p>
-其中，$w_l$、$b_l$是第$l$层的参数；$z_l$为第$l$层的输入(未激活)；$\frac{\alpha L}{\alpha z_l}$是对第$l$层输入的梯度。</p>
+$$<p>其中，$w_l$、$b_l$是第$l$层的参数；$z_l$为第$l$层的输入(未激活)；$\frac{\alpha L}{\alpha z_l}$是对第$l$层输入的梯度。</p>
 <p><strong>多层感知机代码</strong></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
@@ -687,6 +714,7 @@ $$<p>
 </h2><p>在前面的内容中，我们多次提到了激活函数这个概念。激活函数在隐藏层和输出层增加了非线性操作，允许网络复制复杂的非线性行为，从而帮助网络学习数据中的复杂模式、提升表达能力。<br>
 由于绝大多数神经网络都是借助某种形式的梯度下降进行优化，因此激活函数需要是可微分(或者至少是几乎完全可微分的)。<br>
 下面简单介绍一些常用的激活函数。</p>
+<p><strong>(1) Sigmoid激活函数</strong></p>
 $$
 \sigma(x) = \frac{1}{1+e^{-x}}
 $$$$
@@ -703,6 +731,7 @@ $$<img src="sigmoid.png" style="zoom:43%" />
 <li>其输出<strong>不是以0为中心而是全大于0的(这会降低权重更新的效率)</strong>，下一层的神经元会得到上一层输出的全正信号作为输入，因此Sigmoid激活函数一般放在最后的输出层中使用。</li>
 <li><strong>指数运算</strong>耗时。</li>
 </ol>
+<p><strong>(2) Softmax激活函数</strong></p>
 $$
 f(x) = \frac{e^{x_i}}{\sum_{i=0}^{n}e^{x_i}}
 $$<img src="softmax.jpg" style="zoom:63%" />
